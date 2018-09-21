@@ -40,12 +40,18 @@ THREE.Vector3.prototype.mix = function(v2, factor) {
 if(!Date.now) Date.now = function() { return new Date().getTime(); };
 
 export var worldMap;
-var stats;
 
+var stats;
 
 
 function WorldMap() {
 
+  //emilio
+  //make worldMap accessible from other scripts	
+  window.worldMap = this;
+  window.worldMapUI = UI;
+   
+  this.connectionLabel = 'connections'; 	  
   this.geo;
   this.scene = {};
   this.renderer = {};
@@ -228,33 +234,43 @@ WorldMap.prototype = {
   },
 
 
+  //emilio
+  //can we use this method to update the map?
+  //problem: 
+  //  - the list has been already created
+  //         - need to redo the list 
   setMode: function(mode) {
+	  
     this.mode = mode;
-
+    
+    //this update the small legend that we have on the botton left
     UI.updateLegend(this);
-
-    // UI.collapseNavBar();
-
+    
+    //clear selected
     worldMap.clearBothSelectedCountries();
-
+    
+    //update colors
     worldMap.updateCountryColorsOneByOne();
-
+    
     UI.updateModeStatement(worldMap);
 
   },
 
 
   createCountries: function() {
+	  
     log('createCountries()');
-
     UI.updateLoadingInfo('Creating map ...');
 
+    //emilio
+    //this method will create the countries and will push then into 
+    //worldMap.countries.push(country);
     Geometry.createCountriesGeometry(this);
 
     Geometry.updateCountriesGeometry(this, true);
 
     worldMap.updateAllCountryColors();
-
+ 
     worldMap.animationProps.interpolatePos = 1.0;
 
     if(Config.usesWebGL) {
@@ -483,21 +499,6 @@ WorldMap.prototype = {
           c.set(Config.colorVisaDataNotAvailable);
         }
 
-      } else if(this.mode === 'gdp-per-capita') {
-        if( country === this.selectedCountry ) {
-          c.set(Config.colorCountrySelected);
-        } else if(country.gdp > 100) {
-          c.set(country.colorByGDPPerCapita);
-        } else {
-          c.set(Config.colorVisaDataNotAvailable);
-        }
-
-      } else if(this.mode === 'population') {
-        if( country === this.selectedCountry ) {
-          c.set(Config.colorCountrySelected);
-        } else {
-          c.set(country.colorByPopulation);
-        }
       }
 
       if(pos < 1) {
@@ -907,6 +908,7 @@ WorldMap.prototype = {
   },
 
   updateCountrySelection: function() {
+	  
     // log('updateCountrySelection()');
 
     var i;
@@ -960,9 +962,9 @@ WorldMap.prototype = {
                 // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
                 '<span class="visa-title">' 
             		  + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
-                ' for nationals from ' + CountryDataHelpers.getCountryNameWithArticle(this.selectedCountry) +
+                ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(this.selectedCountry) +
                 sovereignty +
-                ' travelling to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
+                ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
                 sovereigntyDestination +
                 '.<br/>' +
                 '<div class="notes">' + this.selectedDestinationCountry.notes +
@@ -982,16 +984,16 @@ WorldMap.prototype = {
             UI.setHeadline(
               // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
               '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
-              ' for nationals from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
+              ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
               sovereignty +
-              ' travelling to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
+              ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
               sovereigntyDestination +
               '.<br/><div class="notes">' + this.selectedDestinationCountry.notes + '</div>' );
           }
 
         } else {
           this.visaInformationFound = false;
-          UI.setHeadline( 'Data not available for nationals from ' 
+          UI.setHeadline( 'Data not available for ' + this.connectionLabel +' from ' 
         	  + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) 
         	  + '. <div class="notes">Please select a different country or click/tap the background to clear selection.</div>' );
 
@@ -1057,10 +1059,10 @@ WorldMap.prototype = {
           }
 
           UI.setHeadline(
-            'Nationals from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
+            CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
             sovereignty +
-            ' can travel to <b>' + this.selectedCountry.numDestinationsFreeOrOnArrival 
-            			+ ' countries</b> without a visa or with visa on arrival.');
+            ' has '+ worldMap.connectionLabel +' to <b>' + this.selectedCountry.numDestinationsFreeOrOnArrival 
+            			+ ' countries.</b>');
           UI.showSelectedLegend();
 
           // this.selectedCountry.populationPercentage + '&nbsp;% of the global population)
@@ -1068,7 +1070,7 @@ WorldMap.prototype = {
         } else {
           this.visaInformationFound = false;
 
-          UI.setHeadline( 'Data not available for nationals from ' 
+          UI.setHeadline( 'Data not available for ' + this.connectionLabel +' from ' 
         		  + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) 
         		  + '. <div class="notes">Please select a different country or click/tap the background to clear selection.</div>');
           UI.showSelectedLegend();
@@ -1114,9 +1116,9 @@ WorldMap.prototype = {
               UI.setHeadline(
                 // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
                 '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
-                ' for nationals from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
+                ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
                 sovereignty +
-                ' travelling to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
+                ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
                 sovereigntyDestination +
                 '.<br/><div class="notes">' + this.selectedDestinationCountry.notes + '</div>' );
 
@@ -1132,16 +1134,16 @@ WorldMap.prototype = {
             UI.setHeadline(
               '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
               // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
-              ' for nationals from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
+              ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
               sovereignty +
-              ' travelling to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
+              ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
               sovereigntyDestination +
               '.<br/><div class="notes">' + this.selectedDestinationCountry.notes + '</div>' );
           }
 
         } else {
           this.visaInformationFound = false;
-          UI.setHeadline( 'Data not available for nationals from ' + 
+          UI.setHeadline( 'Data not available for ' + this.connectionLabel +' from ' + 
         		  CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) + 
         		  '. <div class="notes">Please select a different country or click/tap the background to clear selection.</div>' );
 
@@ -1194,10 +1196,12 @@ WorldMap.prototype = {
         }
 
         UI.setHeadline(
-          toSentenceStart( CountryDataHelpers.getCountryNameWithArticle(this.selectedDestinationCountry) ) +
+          toSentenceStart( 
+        		  CountryDataHelpers.getCountryNameWithArticle(this.selectedDestinationCountry) ) +
           sovereigntyDestination +
-          ' grants nationals from <b>' + this.selectedDestinationCountry.numSourcesFreeOrOnArrival +
-          ' countries</b> access visa-free or with visa on arrival.');
+          ' has ' + worldMap.connectionLabel + ' from <b>' 
+          + this.selectedDestinationCountry.numSourcesFreeOrOnArrival +
+          ' countries.</b>');
         UI.showSelectedLegend();
 
         // (' + populationPercentage + '&nbsp;% of the global population)
@@ -1229,51 +1233,6 @@ WorldMap.prototype = {
         }
       }
       UI.setHeadline(html);
-
-      UI.showMainLegend();
-
-    } else if(this.mode === 'gdp-per-capita') {
-      html = '';
-      if(this.selectedCountry) {
-        if(this.selectedCountry.gdp > 100) {
-          value = Math.round(this.selectedCountry.gdp / this.selectedCountry.population * 1000000);
-          html += 'GDP per capita of ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) 
-          			+ ': ' + formatNumber(value, 0) + ' USD<br/>';
-        } else {
-          html += 'Data for ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) 
-          			+ ' not available<br/>';
-        }
-      }
-      if(this.selectedDestinationCountry) {
-        if(this.selectedDestinationCountry.gdp > 100) {
-          value = Math.round(this.selectedDestinationCountry.gdp / this.selectedDestinationCountry.population * 1000000);
-          html += 'GDP per capita of ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) 
-          			+ ': ' + formatNumber(value, 0) + ' USD<br/>';
-        } else {
-          html += 'Data for ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) 
-          			+ ' not available<br/>';
-        }
-      }
-      UI.setHeadline(html);
-
-      UI.showMainLegend();
-
-    } else if(this.mode === 'population') {
-      html = '';
-      if(this.selectedCountry) {
-        value = this.selectedCountry.population;
-        value = formatNumber(value, 0);
-        html += 'Population of ' 
-        			+ CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) + ': ' + value + '<br/>';
-      }
-      if(this.selectedDestinationCountry) {
-        value = this.selectedDestinationCountry.population;
-        value = formatNumber(value, 0);
-        html += 'Population of ' 
-        			+ CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) + ': ' + value + '<br/>';
-      }
-      UI.setHeadline(html);
-
       UI.showMainLegend();
 
     }
@@ -1325,19 +1284,596 @@ function init() {
   UI.createLoadingInfo();
 
   worldMap = new WorldMap();
-
-  log('Loading Visa requirements from \'' + Config.visaRequirementsFile + '\' ...');
-
-  $.when( $.getJSON(Config.visaRequirementsFile)
-    .fail(function(error) {
-      console.error('Error loading visa requirements', error);
-      UI.updateLoadingInfo('<span class="error">Error loading visa requirements.<br/>Please try again later.</span>');
-
-    })
-  ).then(function(dataRequirements) {
-    log('Visa requirements loaded for ' + dataRequirements.countries.length + ' sovereignties');
-    // log( 'JSON Data: ' + dataRequirements.countries['Germany'].code );
-    worldMap.visaRequirements = dataRequirements;
+  
+  //log('Visa requirements loaded for ' + dataRequirements.countries.length + ' sovereignties');
+  // log( 'JSON Data: ' + dataRequirements.countries['Germany'].code );
+  worldMap.visaRequirements = {
+    		"created": "2018-07-01T05:00:01+02:00",
+    		"type": "VisaRequirements",
+    		"countries": [
+    		{ "name": "Afghanistan", "code": "AFG", "destinations": [	
+//    																	{ "d_name": "Albania",
+//    										"visa_required": "yes",
+//    										"visa_title": "Visa required",
+//    										"notes": "test notes" },	
+    																	{ "d_name": "Algeria",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Andorra",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Angola",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Antigua and Barbuda",
+    										"visa_required": "eta",
+    										"visa_title": "Electronic Entry Visa",
+    										"notes": "" },	{ "d_name": "Argentina",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Armenia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Australia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Austria",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Azerbaijan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Bahamas",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Bahrain",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Bangladesh",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "30 days \n|" },	{ "d_name": "Barbados",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Belarus",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Belgium",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Belize",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Benin",
+    										"visa_required": "on-arrival",
+    										"visa_title": "eVisa / Visa on arrival",
+    										"notes": "30 days \/ 8 days" },	{ "d_name": "Bhutan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Bolivia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Bosnia and Herzegovina",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Botswana",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Brazil",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Brunei",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Bulgaria",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Burkina Faso",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Burundi",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Cambodia",
+    										"visa_required": "on-arrival",
+    										"visa_title": "eVisa / Visa on arrival",
+    										"notes": "30 days\n|" },	{ "d_name": "Cameroon",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Canada",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Cape Verde",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "" },	{ "d_name": "Central African Republic",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Chad",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Chile",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "People's Republic of China",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Colombia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Comoros",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "45 days\n|" },	{ "d_name": "Republic of the Congo",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Democratic Republic of the Congo",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Costa Rica",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Côte d'Ivoire",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "|" },	{ "d_name": "Croatia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Cuba",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Cyprus",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Czech Republic",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Denmark",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Djibouti",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "" },	{ "d_name": "Dominica",
+    										"visa_required": "no",
+    										"visa_title": "Visa not required",
+    										"notes": "21 days\n|" },	{ "d_name": "Dominican Republic",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Ecuador",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Egypt",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "*Visa not required for passenger aged 50 years and above or 16 years and below" },	{ "d_name": "El Salvador",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Equatorial Guinea",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Eritrea",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Estonia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Ethiopia",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "|" },	{ "d_name": "Fiji",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Finland",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "France",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Gabon",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "|" },	{ "d_name": "Gambia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Georgia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Germany",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Ghana",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Greece",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Grenada",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Guatemala",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Guinea",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Guinea-Bissau",
+    										"visa_required": "on-arrival",
+    										"visa_title": "eVisa / Visa on arrival",
+    										"notes": "90 days\n|" },	{ "d_name": "Guyana",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Haiti",
+    										"visa_required": "no",
+    										"visa_title": "Visa not required",
+    										"notes": "3 months\n|" },	{ "d_name": "Honduras",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Hungary",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Iceland",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "India",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Indonesia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Iran",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Iraq",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Ireland",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Israel",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "*Confirmation from Israeli government is required before a visa is" },	{ "d_name": "Italy",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Jamaica",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Japan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Jordan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Kazakhstan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Kenya",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Kiribati",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "North Korea",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "South Korea",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Kuwait",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Kyrgyzstan",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "|" },	{ "d_name": "Laos",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Latvia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Lebanon",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Lesotho",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "|" },	{ "d_name": "Liberia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Libya",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Liechtenstein",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Lithuania",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Luxembourg",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Macedonia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Madagascar",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "90 days\n|" },	{ "d_name": "Malawi",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Malaysia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Maldives",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "30 days\n|" },	{ "d_name": "Mali",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Malta",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Marshall Islands",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Mauritania",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "*Available at Nouakchott\u2013Oumtounsy International days and 90 days and 1 year visa are available" },	{ "d_name": "Mauritius",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Mexico",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Federated States of Micronesia",
+    										"visa_required": "no",
+    										"visa_title": "Visa not required",
+    										"notes": "30 days\n|" },	{ "d_name": "Moldova",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Monaco",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Mongolia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Montenegro",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Morocco",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Mozambique",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "30 days\n|" },	{ "d_name": "Myanmar",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Namibia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Nauru",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Nepal",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Netherlands",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "New Zealand",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Nicaragua",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Niger",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Nigeria",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Norway",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Oman",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Pakistan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Palau",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "30 days\n|" },	{ "d_name": "Panama",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Papua New Guinea",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Paraguay",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Peru",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Philippines",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Poland",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Portugal",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Qatar",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "" },	{ "d_name": "Romania",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Russia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Rwanda",
+    										"visa_required": "on-arrival",
+    										"visa_title": "eVisa / Visa on arrival",
+    										"notes": "30 days\n|" },	{ "d_name": "Saint Kitts and Nevis",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "|" },	{ "d_name": "Saint Lucia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Saint Vincent and the Grenadines",
+    										"visa_required": "no",
+    										"visa_title": "Visa not required",
+    										"notes": "1 month\n|" },	{ "d_name": "Samoa",
+    										"visa_required": "yes|{{sort|Visa not |Visitor's Permit on arrival",
+    										"visa_title": "Visitor's Permit on arrival",
+    										"notes": "60 days" },	{ "d_name": "San Marino",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "São Tomé and Príncipe",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "|" },	{ "d_name": "Saudi Arabia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Senegal",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Serbia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Seychelles",
+    										"visa_required": "yes|{{sort|Visa not |Visitor's Permit on arrival",
+    										"visa_title": "Visitor's Permit on arrival",
+    										"notes": "3 months\n|\n* Issued free of" },	{ "d_name": "Sierra Leone",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Singapore",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Slovakia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Slovenia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Solomon Islands",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Somalia",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "30 days\n|" },	{ "d_name": "South Africa",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "South Sudan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Spain",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Sri Lanka",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Sudan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Suriname",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Swaziland",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Sweden",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Switzerland",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Syria",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Tajikistan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Tanzania",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Thailand",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Timor-Leste",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "30 days\n|" },	{ "d_name": "Togo",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "7 days\n|" },	{ "d_name": "Tonga",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Trinidad and Tobago",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Tunisia",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Turkey",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Turkmenistan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Tuvalu",
+    										"visa_required": "on-arrival",
+    										"visa_title": "Visa on arrival",
+    										"notes": "1 month\n|" },	{ "d_name": "Uganda",
+    										"visa_required": "on-arrival",
+    										"visa_title": "eVisa / Visa on arrival",
+    										"notes": "3 moths\n|" },	{ "d_name": "Ukraine",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "United Arab Emirates",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "United Kingdom",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "United States",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Uruguay",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Uzbekistan",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Vanuatu",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Vatican City",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Venezuela",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "|" },	{ "d_name": "Vietnam",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Yemen",
+    										"visa_required": "yes",
+    										"visa_title": "Visa required",
+    										"notes": "" },	{ "d_name": "Zambia",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "" },	{ "d_name": "Zimbabwe",
+    										"visa_required": "eta",
+    										"visa_title": "eVisa",
+    										"notes": "|" }] }
+    ]};
     worldMap.initD3();
     worldMap.initThree();
 
@@ -1428,7 +1964,7 @@ function init() {
         completeInit();
       }
 
-    });
+ //   });
   });
 
   function animate() {
@@ -1466,7 +2002,6 @@ function completeInit() {
 
   worldMap.createCountries();
   worldMap.initControls();
-
   UI.init(worldMap);
 
   worldMap.inited = true;

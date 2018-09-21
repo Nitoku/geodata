@@ -31,10 +31,6 @@
     font-weight: 400;
   }
 
-  #logo_ml {
-    margin-right: 1px;
-  }
-
   #nationality {
     top: 90px;
     left: 15px;
@@ -107,17 +103,6 @@
 }
 
 
-@media only screen and (max-width: 1100px) {
-
-  #logo_ml {
-    width: 70px;
-  }
-
-  #logo_ml .text {
-    display: none;
-  }
-
-}
 
 
 @media only screen and (max-width: 1023px) {
@@ -174,28 +159,6 @@
     display: none;
   }
 
-  #logo_ml {
-    width: 100%;
-    text-align: left;
-  }
-
-  #logo_ml a {
-    height: 40px;
-  }
-
-  #logo_ml .text {
-    font-size: 12px;
-    right: auto;
-    top: 11px;
-    display: block;
-    color: #6a6d70;
-  }
-
-  #logo_ml img {
-    left: 160px;
-    top: -8px;
-    right: auto;
-  }
 
   .navbar-default .navbar-nav > li > a {
     font-size: 12px;

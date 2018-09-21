@@ -20,8 +20,6 @@ var isMouseDown = false;
 var countryListSorting = '';
 var uiReady = false;
 
-
-
 export function init(worldMap) {
   createLegend(worldMap);
   updateLegend(worldMap);
@@ -77,31 +75,40 @@ export function createLegend(worldMap) {
 		  + Config.colorVisaDataNotAvailable.getHexString() 
 		  + '"></div><div class="text">Special status/data not available</div></div>');
 
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorCountrySelected.getHexString() 
 		  + '"></div><div class="text">Selected country/nationality</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaNotRequired.getHexString() 
 		  + '"></div><div class="text">Visa not required</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaOnArrival.getHexString() 
 		  + '"></div><div class="text">Visa on arrival</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaETA.getHexString() 
 		  + '"></div><div class="text">Electronic Travel Authorization</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaFreeEU.getHexString() 
 		  + '"></div><div class="text">EU freedom of movement</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaSpecial.getHexString() 
 		  + '"></div><div class="text">Special regulations</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaAdmissionRefused.getHexString() 
 		  + '"></div><div class="text">Admission refused</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #'
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #'
 		  + Config.colorVisaRequired.getHexString() 
 		  + '"></div><div class="text">Visa required</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaDataNotAvailable.getHexString() 
 		  + '"></div><div class="text">Data not available</div></div>');
 
@@ -114,6 +121,7 @@ export function updateLegend(worldMap) {
   $('#legend_main .range .min').html('min');
 
   if(worldMap.mode === 'destinations') {
+	  
     $('#legend_main .range .min').html(0);
     $('#legend_main .range .rangelabel').html('Destinations');
     $('#legend_main .range .max').html(worldMap.maxNumDestinationsFreeOrOnArrival);
@@ -131,6 +139,7 @@ export function updateLegend(worldMap) {
     // $('#destination_country_dropdown_container').show();
 
   } else if(worldMap.mode === 'sources') {
+	  
     $('#legend_main .range .min').html(0);
     $('#legend_main .range .rangelabel').html('Sources');
     $('#legend_main .range .max').html(worldMap.maxNumSourcesFreeOrOnArrival);
@@ -148,35 +157,12 @@ export function updateLegend(worldMap) {
     // $('#destination_country_dropdown_container').show();
 
   } else if(worldMap.mode === 'gdp') {
+	  
     $('#legend_main .range .min').html('0 USD');
     $('#legend_main .range .rangelabel').html('GDP');
     num = Math.round(worldMap.maxGDP / 1000);
     num = formatNumber(num, 0);
     $('#legend_main .range .max').html(num + ' b USD');
-
-    // $('#last_update_wikipedia').fadeOut(800);
-    // $('#last_update_naturalearthdata').fadeIn(800);
-
-    // $('#destination_country_dropdown_container').hide();
-
-  } else if(worldMap.mode === 'gdp-per-capita') {
-    $('#legend_main .range .min').html('0 USD');
-    $('#legend_main .range .rangelabel').html('GDP/capita');
-    num = worldMap.maxGDPPerCapita;
-    num = formatNumber(num, 0);
-    $('#legend_main .range .max').html(num + ' USD');
-
-    // $('#last_update_wikipedia').fadeOut(800);
-    // $('#last_update_naturalearthdata').fadeIn(800);
-
-    // $('#destination_country_dropdown_container').hide();
-
-  } else if(worldMap.mode === 'population') {
-    $('#legend_main .range .min').html(0);
-    $('#legend_main .range .rangelabel').html('Population');
-    num = Math.round(worldMap.maxPopulation / 1000000);
-    num = formatNumber(num, 0);
-    $('#legend_main .range .max').html(num + ' m');
 
     // $('#last_update_wikipedia').fadeOut(800);
     // $('#last_update_naturalearthdata').fadeIn(800);
@@ -201,6 +187,7 @@ export function showSelectedLegend() {
 
 
 export function createCountryList(worldMap) {
+	
   $('body').append('<div id="country_list_container"><ul id="country_list"></ul></div>');
 
   var count = 0;
@@ -216,7 +203,8 @@ export function createCountryList(worldMap) {
 
     // add only proper countries:
     if(CountryDataHelpers.isCountry(country)) {
-      var li = $('<li><div class="container"><span class="box"></span><span class="number"></span><span class="text">' 
+      var li = $('<li><div class="container"><span class="box"></span><span class="number">'
+    		  +'</span><span class="text">' 
     		  + name + '</span></div></li>');
       $('#country_list').append(li);
 
@@ -328,12 +316,6 @@ export function updateCountryList(worldMap) {
 
     } else if(worldMap.mode === 'gdp') {
       sortCountryListByGDP();
-
-    } else if(worldMap.mode === 'gdp-per-capita') {
-      sortCountryListByGDPPerCapita();
-
-    } else if(worldMap.mode === 'population') {
-      sortCountryListByPopulation();
 
     }
   }
@@ -539,72 +521,6 @@ function sortCountryListByGDP() {
         num = formatNumber(num, 0) + ' b USD';
       } else {
         num = formatNumber(num, 0) + ' m USD';
-      }
-      $(this).find('.number').html(num);
-
-      $(this).find('.text').html( (index + 1) + '. ' + $(this).data('country').name );
-
-    });
-
-    repositionCountryList(li);
-  }
-}
-
-
-function sortCountryListByGDPPerCapita() {
-  var newSorting = 'gdp-per-capita';
-  if(countryListSorting !== newSorting) {
-    countryListSorting = newSorting;
-
-    var li = $('#country_list').children('li');
-    li.sort(function(a, b) {
-      var aName = $(a).data('country').gdpPerCapita;
-      var bName = $(b).data('country').gdpPerCapita;
-      return ((aName > bName) ? -1 : ((aName < bName) ? 1 : 0));
-    });
-
-    $('#country_list').removeClass('numberhidden');
-    $('#country_list').removeClass('narrownumbers');
-    $('#country_list').addClass('widenumbers');
-
-    li.each(function(index) {
-      var country = $(this).data('country');
-      var num = Math.round(country.gdpPerCapita);
-      num = formatNumber(num, 0) + ' USD';
-      $(this).find('.number').html(num);
-
-      $(this).find('.text').html( (index + 1) + '. ' + $(this).data('country').name );
-
-    });
-
-    repositionCountryList(li);
-  }
-}
-
-
-function sortCountryListByPopulation() {
-  var newSorting = 'population';
-  if(countryListSorting !== newSorting) {
-    countryListSorting = newSorting;
-
-    var li = $('#country_list').children('li');
-    li.sort(function(a, b) {
-      var aName = $(a).data('country').population;
-      var bName = $(b).data('country').population;
-      return ((aName > bName) ? -1 : ((aName < bName) ? 1 : 0));
-    });
-
-    $('#country_list').removeClass('numberhidden');
-    $('#country_list').removeClass('narrownumbers');
-    $('#country_list').addClass('widenumbers');
-
-    li.each(function(index) {
-      var country = $(this).data('country');
-      var num = country.population;
-      if(num > 1000000) {
-        num = Math.round(num / 1000000) + ' m';
-      } else {
-        num = formatNumber(num, 0);
       }
       $(this).find('.number').html(num);
 
@@ -1012,7 +928,7 @@ export function updateCountryTooltip(worldMap, country) {
             $('#country-tooltip .details').html(
               // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
               '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(country) + '</span> ' +
-              ' for nationals from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
+              ' for ' + worldMap.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
               '.<br/>' +
               '<div class="notes">' + country.notes + '</div>');
           } else {
@@ -1033,7 +949,7 @@ export function updateCountryTooltip(worldMap, country) {
               $('#country-tooltip .details').html(
                 // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
                 '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(country) + '</span> ' +
-                ' for nationals from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
+                ' for ' + worldMap.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
                 '.<br/>' +
                 '<div class="notes">' + country.notes + '</div>');
             } else {
@@ -1062,7 +978,7 @@ export function updateCountryTooltip(worldMap, country) {
             		+ CountryDataHelpers.getCountryVisaTitle(worldMap.selectedDestinationCountry) + '</span> ' +
               // CountryDataHelpers.getCountryDetailsByVisaStatus(worldMap.selectedDestinationCountry) +
               ' in ' + worldMap.selectedDestinationCountry.name +
-              ' for nationals from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
+              ' for ' + worldMap.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
               '.<br/><div class="notes">' + worldMap.selectedDestinationCountry.notes + '</div>');
           } else {
             $('#country-tooltip .details').html( 'Data not available.' );
@@ -1082,7 +998,7 @@ export function updateCountryTooltip(worldMap, country) {
               // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
               '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(country) + '</span> ' +
               ' in ' + worldMap.selectedDestinationCountry.name +
-              ' for nationals from ' + CountryDataHelpers.getCountryNameWithArticle(country) +
+              ' for ' + worldMap.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(country) +
               '.<br/><div class="notes">' + country.notes + '</div>');
           } else {
             $('#country-tooltip .details').html( 'Data not available.' );
@@ -1096,12 +1012,6 @@ export function updateCountryTooltip(worldMap, country) {
 
     } else if(worldMap.mode === 'gdp') {
       showCountryHoverInfoGDP(country);
-
-    } else if(worldMap.mode === 'gdp-per-capita') {
-      showCountryHoverInfoGDPPerCapita(country);
-
-    } else if(worldMap.mode === 'population') {
-      showCountryHoverInfoPopulation(country);
 
     }
   }
@@ -1129,8 +1039,10 @@ export function showCountryHoverInfoVisaFreeDestinations(country) {
 
 
 export function showCountryHoverInfoVisaFreeSources(country) {
-  $('#country-tooltip .details').html( 'Nationals from ' + country.numSourcesFreeOrOnArrival 
-		  + ' countries are granted access visa-free or with visa on arrival to ' + country.name );
+  $('#country-tooltip .details').html( country.name  + ' has ' 
+		  + worldMap.connectionLabel 
+		  + ' from ' + country.numSourcesFreeOrOnArrival 
+		  + ' countries.' );
   $('#country-tooltip .details').show();
 };
 
@@ -1146,23 +1058,6 @@ export function showCountryHoverInfoGDP(country) {
 };
 
 
-export function showCountryHoverInfoGDPPerCapita(country) {
-  if(country.gdp > 100) {
-    var value = Math.round(country.gdp / country.population * 1000000);
-    $('#country-tooltip .details').html( 'GDP per capita: ' + formatNumber(value, 0) + ' USD' );
-  } else {
-    $('#country-tooltip .details').html( 'Data not available' );
-  }
-  $('#country-tooltip .details').show();
-};
-
-
-export function showCountryHoverInfoPopulation(country) {
-  var value = country.population;
-  $('#country-tooltip .details').html( 'Population: ' + formatNumber(value, 0) );
-  $('#country-tooltip .details').show();
-};
-
 
 export function setHeadline(html) {
   $('#travelscope').html(html);
@@ -1172,49 +1067,14 @@ export function setHeadline(html) {
 export function updateModeStatement(worldMap) {
 
   //emilio	 
-  //if(worldMap.mode === 'destinations') {
-  //  setHeadline('This map explores the power of passports: 
-	// it visualizes the number of countries people with a certain ' + 
-	// 'nationality can travel to without a visa or with visa on arrival.');
-  //} else if(worldMap.mode === 'sources') {
-  //  setHeadline('This map visualizes the number of sources countries, 
-	// whose nationals can enter a specific country without a visa or with visa on arrival.');
-  //} else if(worldMap.mode === 'gdp') {
-  //  setHeadline('This map visualizes the GDP of all the countries in the world.');
-  //} else if(worldMap.mode === 'gdp-per-capita') {
-  //  setHeadline('This map visualizes the GDP-per-capita of all the countries in the world.');
-  //} else if(worldMap.mode === 'population') {
-  //  setHeadline('This map visualizes the population of all the countries in the world. ' 
-  //	+ ' Total population (2014): ' + formatNumber(worldMap.totalPopulation, 0));
-  //}
-
-  if(IS_DESKTOP) {
-    var keyboardhint;
-    if(worldMap.mode === 'destinations') {
-      keyboardhint = 'Click map to select source country,<br/>';
-      if(Config.isMac) {
-        keyboardhint += 'CMD + Click';
-      } else {
-        keyboardhint += 'CTRL + Click';
-      }
-      keyboardhint += ' to select destination county.';
-
-      $('#travelscope').append('<div class="notes">' + keyboardhint + '</div>');
-
-    } else if(worldMap.mode === 'sources') {
-      keyboardhint = 'Click map to select destination country,<br/>';
-      if(Config.isMac) {
-        keyboardhint += 'CMD + Click';
-      } else {
-        keyboardhint += 'CTRL + Click';
-      }
-      keyboardhint += ' to select source county.';
-
-      $('#travelscope').append('<div class="notes">' + keyboardhint + '</div>');
-    }
-
+  if(worldMap.mode === 'destinations') {
+    setHeadline('Destinations.');
+  } else if(worldMap.mode === 'sources') {
+    setHeadline('Sources.');
+  } else if(worldMap.mode === 'gdp') {
+	  setHeadline('Country Data.');
   }
-
+	
   if(!$('#travelscope').is( ':visible' )) {
     // $('#travelscope').fadeIn(600);
 
@@ -1236,11 +1096,11 @@ export function updateModeStatement(worldMap) {
 
     $('#legend_main').fadeIn(800);
     $('#slider_zoom').fadeIn(800);
-    if($(window).width() > 860) {
-      $('#social').fadeIn(800);
-    }
+    //if($(window).width() > 860) {
+    //  $('#social').fadeIn(800);
+    //}
     $('#view_switch').fadeIn(800);
-    $('#last_update_wikipedia').fadeIn(800);
+    //$('#last_update_wikipedia').fadeIn(800);
     if($(window).width() > 480) {
       $('#button_country_list').fadeIn(800);
     }
@@ -1363,11 +1223,6 @@ function onWindowResize() {
       } else {
         $('#button_country_list').hide();
         $('#country_list').hide();
-      }
-      if($(window).width() > 860) {
-        $('#social').show();
-      } else {
-        $('#social').hide();
       }
     }
 

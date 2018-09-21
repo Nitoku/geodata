@@ -252,8 +252,11 @@ export function getCountryColorByPopulation(country, maxPopulation) {
 
 
 export function getCountryVisaTitle(country) {
+  //emilio 
+  //if we don't have data provide no data available	
   if(country.visa_title === '') {
-    return 'Special regulations';
+    //return 'Special regulations';
+	  return 'Data not available';
   } else {
     return country.visa_title;
   }

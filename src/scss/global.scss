@@ -154,45 +154,6 @@ b {
 	/* background-color: transparent !important; */
 }
 
-#logo_ml {
-	padding: 0;
-	margin-right: 15px;
-	position: relative;
-	opacity: 0.85;
-	width: 200px;
-	height: 50px;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  a {
-    height: 50px;
-    width: 100%;
-  }
-
-  .text {
-    display: block;
-    clear: left;
-    position: absolute;
-    top: 15px;
-    right: 70px;
-    font-size: 10px;
-    letter-spacing: 0.05em;
-    color: white;
-  }
-
-  img {
-    margin: 0;
-    width: 50px;
-    height: 50px;
-    pointer-events: auto;
-    position: absolute;
-    top: -3px;
-    right: 10px;
-  }
-
-}
 
 #background {
 	

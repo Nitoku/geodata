@@ -22,18 +22,18 @@ export function initPanels() {
   $('#about .panel-close').click(function(event) {
     hidePanel($('#about'));
   });
-  $('#button_disclaimer').click(function(event) {
-    if(!$('#disclaimer').is( ':visible' )) {
-      showPanel($('#disclaimer'));
-    } else {
-      hidePanel($('#disclaimer'));
-      $(this).blur();
-    }
-    UI.collapseNavBar();
-  });
-  $('#disclaimer .panel-close').click(function(event) {
-    hidePanel($('#disclaimer'));
-  });
+//  $('#button_disclaimer').click(function(event) {
+//    if(!$('#disclaimer').is( ':visible' )) {
+//      showPanel($('#disclaimer'));
+//    } else {
+//      hidePanel($('#disclaimer'));
+//      $(this).blur();
+//    }
+//    UI.collapseNavBar();
+//  });
+//  $('#disclaimer .panel-close').click(function(event) {
+//    hidePanel($('#disclaimer'));
+//  });
 
 };
 

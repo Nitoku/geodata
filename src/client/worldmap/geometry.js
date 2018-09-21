@@ -43,6 +43,7 @@ export function createCountriesGeometry(worldMap) {
         globalPointCount += pointCount;
 
         var country = {
+        		
           name: feature.properties.NAME_LONG,
           nameSort: feature.properties.NAME_SORT,
           sovereignt: feature.properties.SOVEREIGNT,
@@ -61,6 +62,7 @@ export function createCountriesGeometry(worldMap) {
           numSourcesFreeOrOnArrival: 0,
           color: new THREE.Color(Config.colorCountryDefault),
           colorLast: new THREE.Color(Config.colorCountryDefault)
+        
         };
 
         if(country.disputed) {
@@ -70,6 +72,7 @@ export function createCountriesGeometry(worldMap) {
         }
 
         if(!country.disputed) {
+        	
           for(var r = 0; r < worldMap.visaRequirements.countries.length; r++) {
             // 199 nationalities travelling to 243 (?) countries, assuming nationals 
         	// 		from a country don't need a visa to the sovereignty's main country:
@@ -86,6 +89,7 @@ export function createCountriesGeometry(worldMap) {
               numVisaRequirementsFound++;
             }
           }
+          
         }
 
         worldMap.countries.push(country);
@@ -95,6 +99,7 @@ export function createCountriesGeometry(worldMap) {
         // }
 
         if(!country.disputed) {
+        	
           countriesUsed.push(country.name);
 
           if(CountryDataHelpers.isCountry(country)) {
@@ -102,6 +107,7 @@ export function createCountriesGeometry(worldMap) {
           } else {
             worldMap.countryDropdownChoices.push({text: country.name + ' (' + country.sovereignt + ')', value: country.name});
           }
+          
         }
 
         // log("Geometry" + country.name + " | shapes: " + shapes.length + ", total points: " + pointCount);
