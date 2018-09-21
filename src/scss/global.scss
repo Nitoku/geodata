@@ -5,7 +5,7 @@ html {
 body {
 	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-weight: 300;
-	color: #ddd;
+	color: #1b9866;
 	background-color: #000;
 	font-size: 12px;
 	line-height: 18px;
@@ -79,11 +79,11 @@ b {
 /* override bootstrap defaults: */
 
 .navbar-default {
-	background-color: #444444;
-	border-color: #444444;
+	background-color: #e6f5ef;
+	border-color: #e6f5ef;
 }
 .navbar-default .navbar-brand {
-	color: #ecf0f1;
+	color: #676a6c;
 	font-size: 20px;
 	font-weight: 400;
 	-webkit-font-smoothing: antialiased;
@@ -100,29 +100,29 @@ b {
 	position: absolute;
 }
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-  color: #ffffff;
+  color: #3b3d3e;
 }
 .navbar-default .navbar-text {
-  color: #ecf0f1;
+  color: #676a6c;
 }
 .navbar-default .navbar-nav > li > a {
-  color: #ecf0f1;
+  color: #676a6c;
   transition: all .2s ease-in-out;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
   color: #ffffff;
-	background-color: #5d5c5c;
+	background-color: #1b9866;
 }
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   color: #ffffff;
-  background-color: #5d5c5c;
+  background-color: #1b9866;
 }
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
   color: #ffffff;
-  background-color: #5d5c5c;
+  background-color: #1b9866;
 }
 .navbar-default .navbar-toggle {
-  // border-color: #5d5c5c;
+  
   border: none;
   margin-right: 5px;
   opacity: 0.8;
@@ -136,14 +136,14 @@ b {
   background-color: transparent;
 }
 .navbar-default .navbar-toggle .icon-bar {
-  background-color: #ecf0f1;
+  background-color: #676a6c;
 }
 .navbar-default .navbar-collapse,
 .navbar-default .navbar-form {
   border-color: transparent;
 }
 .navbar-default .navbar-link {
-  color: #ecf0f1;
+  color: #676a6c;
 }
 .navbar-default .navbar-link:hover {
   color: #ffffff;
@@ -195,6 +195,7 @@ b {
 }
 
 #background {
+	
 	position: fixed;
 	top: 0px;
 	left: 0px;
@@ -205,14 +206,16 @@ b {
 	overflow: hidden;
 	pointer-events: none;
 
-	background: #000000; /* Old browsers */
-	background: -moz-linear-gradient(top,  #000000 0%, #333333 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#000000), color-stop(100%,#333333)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #000000 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #000000 0%,#333333 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #000000 0%,#333333 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #000000 0%,#333333 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#333333',GradientType=0 ); /* IE6-9 */
+	background: white; /* Old browsers */
+	//background: #000000; /* Old browsers */
+	//background: -moz-linear-gradient(top,  #000000 0%, #333333 100%); /* FF3.6+ */
+	//background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#000000), color-stop(100%,#333333)); /* Chrome,Safari4+ */
+	//background: -webkit-linear-gradient(top,  #000000 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
+	//background: -o-linear-gradient(top,  #000000 0%,#333333 100%); /* Opera 11.10+ */
+	//background: -ms-linear-gradient(top,  #000000 0%,#333333 100%); /* IE10+ */
+	//background: linear-gradient(to bottom,  #000000 0%,#333333 100%); /* W3C */
+	//filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#333333',GradientType=0 ); /* IE6-9 */
+	
 }
 
 #container {
@@ -242,7 +245,8 @@ b {
     width: 100%;
     height: 250px;
     opacity: 0.8;
-    background: url('../assets/img/gradient-top-left.png') no-repeat;
+    //emilio
+    //background: url('../assets/img/gradient-top-left.png') no-repeat;
     pointer-events: none;
   }
 
@@ -478,7 +482,7 @@ b {
     }
 
     > li > a {
-      color: #ecf0f1;
+      color: #676a6c;
       background-color: #222222;
       padding: 0.5em 0.75em;
       font-weight: 400;

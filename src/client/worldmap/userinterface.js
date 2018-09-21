@@ -45,26 +45,65 @@ export function completeInit() {
 
 
 export function createLegend(worldMap) {
-  $('#legend_main .range .box').css('background', '#' + Config.colorMaxDestinations.getHexString());  /* Old browsers */
-  $('#legend_main .range .box').css('background', '-moz-linear-gradient(left,  #' + Config.colorZeroDestinations.getHexString() + ' 0%, #' + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* FF3.6+ */
-  $('#legend_main .range .box').css('background', '-webkit-gradient(linear,left top,right top,from(#' + Config.colorZeroDestinations.getHexString() + '),to(#' + Config.colorMaxDestinations.getHexString() + '))');  /* Chrome,Safari4+ */
-  $('#legend_main .range .box').css('background', '-webkit-linear-gradient(left,  #' + Config.colorZeroDestinations.getHexString() + ' 0%,#' + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* Chrome10+,Safari5.1+ */
-  $('#legend_main .range .box').css('background', '-o-linear-gradient(left,  #' + Config.colorZeroDestinations.getHexString() + ' 0%,#' + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* Opera 11.10+ */
-  $('#legend_main .range .box').css('background', '-ms-linear-gradient(left,  #' + Config.colorZeroDestinations.getHexString() + ' 0%,#' + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* IE10+ */
-  $('#legend_main .range .box').css('background', 'linear-gradient(to right,  #' + Config.colorZeroDestinations.getHexString() + ' 0%,#' + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* W3C */
-  $('#legend_main .range .box').css('filter', 'progid:DXImageTransform.Microsoft.gradient( startColorstr=\'#' + Config.colorZeroDestinations.getHexString() + '\', endColorstr=\'#' + Config.colorMaxDestinations.getHexString() + '\',GradientType=1 )'); /* IE6-9 */
+  
+  //emilio
+  //$('#legend_main .range .box').css('background', 'white');  /* Old browsers */
+  $('#legend_main .range .box').css('background', '#' 
+		  + Config.colorMaxDestinations.getHexString());  /* Old browsers */
+  $('#legend_main .range .box').css('background', '-moz-linear-gradient(left,  #' 
+		  + Config.colorZeroDestinations.getHexString() + ' 0%, #' 
+		  + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* FF3.6+ */
+  $('#legend_main .range .box').css('background', '-webkit-gradient(linear,left top,right top,from(#' 
+		  + Config.colorZeroDestinations.getHexString() + '),to(#' 
+		  + Config.colorMaxDestinations.getHexString() + '))');  /* Chrome,Safari4+ */
+  $('#legend_main .range .box').css('background', '-webkit-linear-gradient(left,  #' 
+		  + Config.colorZeroDestinations.getHexString() + ' 0%,#'
+		  + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* Chrome10+,Safari5.1+ */
+  $('#legend_main .range .box').css('background', '-o-linear-gradient(left,  #' 
+		  + Config.colorZeroDestinations.getHexString() + ' 0%,#' 
+		  + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* Opera 11.10+ */
+  $('#legend_main .range .box').css('background', '-ms-linear-gradient(left,  #' 
+		  + Config.colorZeroDestinations.getHexString() + ' 0%,#' 
+		  + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* IE10+ */
+  $('#legend_main .range .box').css('background', 'linear-gradient(to right,  #' 
+		  + Config.colorZeroDestinations.getHexString() + ' 0%,#' 
+		  + Config.colorMaxDestinations.getHexString() + ' 100%)'); /* W3C */
+  $('#legend_main .range .box').css('filter', 
+		  'progid:DXImageTransform.Microsoft.gradient( startColorstr=\'#' 
+		  + Config.colorZeroDestinations.getHexString() + '\', endColorstr=\'#' 
+		  + Config.colorMaxDestinations.getHexString() + '\',GradientType=1 )'); /* IE6-9 */
 
-  $('#legend_main .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorVisaDataNotAvailable.getHexString() + '"></div><div class="text">Special status/data not available</div></div>');
+  $('#legend_main .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorVisaDataNotAvailable.getHexString() 
+		  + '"></div><div class="text">Special status/data not available</div></div>');
 
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorCountrySelected.getHexString() + '"></div><div class="text">Selected country/nationality</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorVisaNotRequired.getHexString() + '"></div><div class="text">Visa not required</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorVisaOnArrival.getHexString() + '"></div><div class="text">Visa on arrival</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorVisaETA.getHexString() + '"></div><div class="text">Electronic Travel Authorization</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorVisaFreeEU.getHexString() + '"></div><div class="text">EU freedom of movement</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorVisaSpecial.getHexString() + '"></div><div class="text">Special regulations</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorVisaAdmissionRefused.getHexString() + '"></div><div class="text">Admission refused</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorVisaRequired.getHexString() + '"></div><div class="text">Visa required</div></div>');
-  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' + Config.colorVisaDataNotAvailable.getHexString() + '"></div><div class="text">Data not available</div></div>');
+  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorCountrySelected.getHexString() 
+		  + '"></div><div class="text">Selected country/nationality</div></div>');
+  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorVisaNotRequired.getHexString() 
+		  + '"></div><div class="text">Visa not required</div></div>');
+  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorVisaOnArrival.getHexString() 
+		  + '"></div><div class="text">Visa on arrival</div></div>');
+  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorVisaETA.getHexString() 
+		  + '"></div><div class="text">Electronic Travel Authorization</div></div>');
+  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorVisaFreeEU.getHexString() 
+		  + '"></div><div class="text">EU freedom of movement</div></div>');
+  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorVisaSpecial.getHexString() 
+		  + '"></div><div class="text">Special regulations</div></div>');
+  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorVisaAdmissionRefused.getHexString() 
+		  + '"></div><div class="text">Admission refused</div></div>');
+  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #'
+		  + Config.colorVisaRequired.getHexString() 
+		  + '"></div><div class="text">Visa required</div></div>');
+  $('#legend_selected .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorVisaDataNotAvailable.getHexString() 
+		  + '"></div><div class="text">Data not available</div></div>');
 
 };
 
@@ -170,13 +209,15 @@ export function createCountryList(worldMap) {
     var name = country.name;
 
     // if(name === 'United States') {
-      // console.log(country.properties, CountryDataHelpers.isCountry(country), country.type === 'Country', country.sovereignt);
+      // console.log(country.properties, 
+      //  CountryDataHelpers.isCountry(country), country.type === 'Country', country.sovereignt);
       // console.log(country.type);
     // }
 
     // add only proper countries:
     if(CountryDataHelpers.isCountry(country)) {
-      var li = $('<li><div class="container"><span class="box"></span><span class="number"></span><span class="text">' + name + '</span></div></li>');
+      var li = $('<li><div class="container"><span class="box"></span><span class="number"></span><span class="text">' 
+    		  + name + '</span></div></li>');
       $('#country_list').append(li);
 
       li.data('height', li.height());
@@ -349,7 +390,8 @@ function sortCountryListByFreeDestinations() {
     var rank = 0;
     li.each(function(index) {
       var country = $(this).data('country');
-      // var width = parseInt(country.numDestinationsFreeOrOnArrival / worldMap.maxNumDestinationsFreeOrOnArrival * 200);
+      // var width = parseInt(country.numDestinationsFreeOrOnArrival / 
+      //                      worldMap.maxNumDestinationsFreeOrOnArrival * 200);
       var num = country.numDestinationsFreeOrOnArrival;
       if(country.destinations.length === 0) {
         num = '?';
@@ -703,7 +745,10 @@ export function initGeneralElements(worldMap) {
       max: 100,
       value: 0,
       slide: function(event, ui) {
-        worldMap.camera.position.setLength( ( 100 - ui.value) / 100 * (worldMap.controls.maxDistance - worldMap.controls.minDistance) + worldMap.controls.minDistance);
+        worldMap.camera.position.setLength( 
+        		( 100 - ui.value) / 100 * 
+        		(worldMap.controls.maxDistance - worldMap.controls.minDistance) 
+        		+ worldMap.controls.minDistance);
       }
     });
 
@@ -716,7 +761,8 @@ export function initGeneralElements(worldMap) {
 
 
 export function updateZoomSlider(worldMap) {
-  var z = (worldMap.camera.position.length() - worldMap.controls.minDistance) / (worldMap.controls.maxDistance - worldMap.controls.minDistance);
+  var z = (worldMap.camera.position.length() - worldMap.controls.minDistance) / 
+  (worldMap.controls.maxDistance - worldMap.controls.minDistance);
   z = (1 - z) * 100;
   $('#slider_zoom').slider('value', z);
 };
@@ -893,7 +939,8 @@ export function initDestinationCountryDropDown(worldMap) {
           return;
         }
 
-        if(worldMap.selectedCountry !== selectedDestinationCountryNew && worldMap.selectedDestinationCountry !== selectedDestinationCountryNew) {
+        if(worldMap.selectedCountry !== selectedDestinationCountryNew && 
+        		worldMap.selectedDestinationCountry !== selectedDestinationCountryNew) {
           worldMap.setSelectedDestinationCountry(selectedDestinationCountryNew);
           worldMap.trackEvent('destinationCountryDropdownSelect', selectedDestinationCountryNew.name);
           worldMap.updateCountryHover(selectedDestinationCountryNew);
@@ -1011,7 +1058,8 @@ export function updateCountryTooltip(worldMap, country) {
         } else if(country === worldMap.selectedCountry) {
           if(worldMap.visaInformationFound) {
             $('#country-tooltip .details').html(
-              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(worldMap.selectedDestinationCountry) + '</span> ' +
+              '<span class="visa-title">' 
+            		+ CountryDataHelpers.getCountryVisaTitle(worldMap.selectedDestinationCountry) + '</span> ' +
               // CountryDataHelpers.getCountryDetailsByVisaStatus(worldMap.selectedDestinationCountry) +
               ' in ' + worldMap.selectedDestinationCountry.name +
               ' for nationals from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
@@ -1070,7 +1118,9 @@ export function hideCountryTooltip() {
 
 export function showCountryHoverInfoVisaFreeDestinations(country) {
   if(country.destinations.length > 0) {
-    $('#country-tooltip .details').html( country.numDestinationsFreeOrOnArrival + ' destination countries nationals from ' + CountryDataHelpers.getCountryNameWithArticle(country) + ' can travel to visa-free or with visa on arrival' );
+    $('#country-tooltip .details').html( country.numDestinationsFreeOrOnArrival 
+    		+ ' destination countries nationals from ' + CountryDataHelpers.getCountryNameWithArticle(country) 
+    		+ ' can travel to visa-free or with visa on arrival' );
   } else {
     $('#country-tooltip .details').html( 'Data not available.' );
   }
@@ -1079,7 +1129,8 @@ export function showCountryHoverInfoVisaFreeDestinations(country) {
 
 
 export function showCountryHoverInfoVisaFreeSources(country) {
-  $('#country-tooltip .details').html( 'Nationals from ' + country.numSourcesFreeOrOnArrival + ' countries are granted access visa-free or with visa on arrival to ' + country.name );
+  $('#country-tooltip .details').html( 'Nationals from ' + country.numSourcesFreeOrOnArrival 
+		  + ' countries are granted access visa-free or with visa on arrival to ' + country.name );
   $('#country-tooltip .details').show();
 };
 
@@ -1119,17 +1170,23 @@ export function setHeadline(html) {
 
 
 export function updateModeStatement(worldMap) {
-  if(worldMap.mode === 'destinations') {
-    setHeadline('This map explores the power of passports: it visualizes the number of countries people with a certain nationality can travel to without a visa or with visa on arrival.');
-  } else if(worldMap.mode === 'sources') {
-    setHeadline('This map visualizes the number of sources countries, whose nationals can enter a specific country without a visa or with visa on arrival.');
-  } else if(worldMap.mode === 'gdp') {
-    setHeadline('This map visualizes the GDP of all the countries in the world.');
-  } else if(worldMap.mode === 'gdp-per-capita') {
-    setHeadline('This map visualizes the GDP-per-capita of all the countries in the world.');
-  } else if(worldMap.mode === 'population') {
-    setHeadline('This map visualizes the population of all the countries in the world. Total population (2014): ' + formatNumber(worldMap.totalPopulation, 0));
-  }
+
+  //emilio	 
+  //if(worldMap.mode === 'destinations') {
+  //  setHeadline('This map explores the power of passports: 
+	// it visualizes the number of countries people with a certain ' + 
+	// 'nationality can travel to without a visa or with visa on arrival.');
+  //} else if(worldMap.mode === 'sources') {
+  //  setHeadline('This map visualizes the number of sources countries, 
+	// whose nationals can enter a specific country without a visa or with visa on arrival.');
+  //} else if(worldMap.mode === 'gdp') {
+  //  setHeadline('This map visualizes the GDP of all the countries in the world.');
+  //} else if(worldMap.mode === 'gdp-per-capita') {
+  //  setHeadline('This map visualizes the GDP-per-capita of all the countries in the world.');
+  //} else if(worldMap.mode === 'population') {
+  //  setHeadline('This map visualizes the population of all the countries in the world. ' 
+  //	+ ' Total population (2014): ' + formatNumber(worldMap.totalPopulation, 0));
+  //}
 
   if(IS_DESKTOP) {
     var keyboardhint;

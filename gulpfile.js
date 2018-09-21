@@ -119,7 +119,10 @@ gulp.task('watchify', function() {
     plugin: []
   });
   var bundler = watchify(browserify(options.src + '/client.js', args))
-    .transform(babelify, { /* opts */ })
+    //.transform(babelify, { /* opts */ })
+  .transform(babelify.configure({
+    presets: ["es2015"]
+  }))
     .transform(envify({
       NODE_ENV: 'development',
     }));
@@ -141,7 +144,10 @@ gulp.task('build-bundle', function() {
     debug: false
   });
   var bundler = browserify(options.src + '/client.js', args)
-    .transform(babelify, { /* opts */ })
+    //.transform(babelify, { /* opts */ })
+    .transform(babelify.configure({
+    presets: ["es2015"]
+  }))
     .transform({global: true}, envify({ // global is important here!
       _: 'purge',
       NODE_ENV: 'production'
@@ -196,7 +202,13 @@ gulp.task('browser-sync', function() {
       baseDir: './' + options.dest,
       middleware: [history()]
     },
-
+    //socket need to be added to enable browser sync 
+    //to work inside the frame 
+    socket: {
+   	    domain: 'localhost:3000'
+    },
+    //need cors if we are going to work inside the iframe
+    cors : true,
     reloadDelay: 300
   });
 });
