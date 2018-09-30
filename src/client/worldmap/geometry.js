@@ -49,6 +49,9 @@ export function createCountriesGeometry(worldMap) {
           sovereignt: feature.properties.SOVEREIGNT,
           brkName: feature.properties.BRK_NAME, // in disputed areas
           noteBrk: feature.properties.NOTE_BRK, // in disputed areas
+          // emilio added userCountryData will replace the 
+          // current GDP values used on the map
+          userCountryData : 0,
           gdp: feature.properties.GDP_MD_EST,
           gdpPerCapita: feature.properties.GDP_PER_CAPITA,
           population: feature.properties.POP_EST,
@@ -73,19 +76,19 @@ export function createCountriesGeometry(worldMap) {
 
         if(!country.disputed) {
         	
-          for(var r = 0; r < worldMap.visaRequirements.countries.length; r++) {
+          for(var r = 0; r < worldMap.userData.countries.length; r++) {
             // 199 nationalities travelling to 243 (?) countries, assuming nationals 
         	// 		from a country don't need a visa to the sovereignty's main country:
             // if(CountryDataHelpers.matchDestinationToCountryName(country.name_long, 
-        	//      worldMap.visaRequirements.countries[r].name) || 
+        	//      worldMap.userData.countries[r].name) || 
         	//        CountryDataHelpers.matchDestinationToCountryName(
-        	//      worldMap.visaRequirements.countries[r].name, country.name)) {
+        	//      worldMap.userData.countries[r].name, country.name)) {
             if(CountryDataHelpers.matchDestinationToCountryName(country.sovereignt, 
-            		worldMap.visaRequirements.countries[r].name) || 
+            		worldMap.userData.countries[r].name) || 
             		CountryDataHelpers.matchDestinationToCountryName(
-            				worldMap.visaRequirements.countries[r].name, country.sovereignt)) {
+            				worldMap.userData.countries[r].name, country.sovereignt)) {
               // log('Loading visa requirements for: ' + country.name);
-              country.destinations = worldMap.visaRequirements.countries[r].destinations;
+              country.destinations = worldMap.userData.countries[r].destinations;
               numVisaRequirementsFound++;
             }
           }
@@ -94,18 +97,21 @@ export function createCountriesGeometry(worldMap) {
 
         worldMap.countries.push(country);
 
-        // if(country.destinations.length === 0) {
+        //if(country.destinations.length === 0) {
         //   console.error('Geometry: No visa requirements found for: ' + country.name);
-        // }
+        //}
 
         if(!country.disputed) {
+        //if(country.destinations.length !== 0 && !country.disputed ) {
         	
           countriesUsed.push(country.name);
 
           if(CountryDataHelpers.isCountry(country)) {
-            worldMap.countryDropdownChoices.push({text: country.name, value: country.name});
+            worldMap.countryDropdownChoices.push(
+            		{text: country.name, value: country.name});
           } else {
-            worldMap.countryDropdownChoices.push({text: country.name + ' (' + country.sovereignt + ')', value: country.name});
+            worldMap.countryDropdownChoices.push({text: country.name 
+            	+ ' (' + country.sovereignt + ')', value: country.name});
           }
           
         }
@@ -123,13 +129,13 @@ export function createCountriesGeometry(worldMap) {
   // console.log(find(worldMap.countries, (c) => c.name === 'China'));
 
   // Add countries that didn't exist in geojson:
-  // for(r = 0; r < worldMap.visaRequirements.countries.length; r++) {
+  // for(r = 0; r < worldMap.userData.countries.length; r++) {
   //   if(!find(worldMap.countries, (c) => {
-  //     return c.name === worldMap.visaRequirements.countries[r].name ||
-  //     c.sovereignt === worldMap.visaRequirements.countries[r].name
+  //     return c.name === worldMap.userData.countries[r].name ||
+  //     c.sovereignt === worldMap.userData.countries[r].name
   //     ;
   //   })) {
-  //     console.log(worldMap.visaRequirements.countries[r]);
+  //     console.log(worldMap.userData.countries[r]);
   //   }
   // }
 
@@ -163,11 +169,12 @@ export function createCountriesGeometry(worldMap) {
 
       worldMap.countries[i].numDestinationsFreeOrOnArrival = 0;
       for(d = 0; d < destinations.length; d++) {
-        if(destinations[d].visa_required === 'no' || destinations[d].visa_required === 'on-arrival' || 
-        		destinations[d].visa_required === 'free-eu'
-           // || destinations[d].visa_required === 'evisa' || 
-           //			destinations[d].visa_required === 'evisitor' || 
-           //	 		destinations[d].visa_required === 'eta'
+        if(destinations[d].linkTypeName === 'no' || 
+        		destinations[d].linkTypeName === 'on-arrival' || 
+        		   destinations[d].linkTypeName === 'free-eu'
+           // || destinations[d].linkTypeName === 'evisa' || 
+           //			destinations[d].linkTypeName === 'evisitor' || 
+           //	 		destinations[d].linkTypeName === 'eta'
           ) {
           worldMap.countries[i].numDestinationsFreeOrOnArrival++;
         }
@@ -192,9 +199,9 @@ export function createCountriesGeometry(worldMap) {
       if(CountryDataHelpers.isCountry(worldMap.countries[i])) {
         destinations = worldMap.countries[i].destinations;
         for(d = 0; d < destinations.length; d++) {
-          if(destinations[d].visa_required === 'no' || 
-        		  destinations[d].visa_required === 'on-arrival' || 
-        		  destinations[d].visa_required === 'free-eu') {
+          if(destinations[d].linkTypeName === 'no' || 
+        		  destinations[d].linkTypeName === 'on-arrival' || 
+        		  destinations[d].linkTypeName === 'free-eu') {
             country = CountryDataHelpers.getCountryByName(worldMap.countries, destinations[d].d_name);
             if(country !== null) {
               country.numSourcesFreeOrOnArrival++;
@@ -215,7 +222,8 @@ export function createCountriesGeometry(worldMap) {
         worldMap.maxPopulation = worldMap.countries[i].population;
       }
       worldMap.totalPopulation += worldMap.countries[i].population;
-      worldMap.countries[i].gdpPerCapita = worldMap.countries[i].gdp / worldMap.countries[i].population * 1000000;
+      worldMap.countries[i].gdpPerCapita = 
+    	  		worldMap.countries[i].gdp / worldMap.countries[i].population * 1000000;
       if( worldMap.countries[i].gdpPerCapita > worldMap.maxGDPPerCapita ) {
         if(worldMap.countries[i].gdp > 100) {
           worldMap.maxGDPPerCapita = worldMap.countries[i].gdp / worldMap.countries[i].population * 1000000;
@@ -243,7 +251,7 @@ export function createCountriesGeometry(worldMap) {
   log('Geometry: ' + stringLoaded);
 
   log('Geometry: visa requirements matched from ' + 
-		  worldMap.visaRequirements.countries.length + 
+		  worldMap.userData.countries.length + 
 		  ' sovereignties to ' + numVisaRequirementsFound + 
 		  ' countries from \'' + Config.visaRequirementsFile + '\'');
   // log('Max number of visa-free destinations: ' + worldMap.maxNumDestinationsFreeOrOnArrival);
@@ -633,7 +641,7 @@ export function updateCountriesBufferGeometry(worldMap) {
     var vertices = worldMap.countries[i].geometry.vertices;
 
     // log( worldMap.countries[i].name );
-    // log( worldMap.countries[i].visa_required );
+    // log( worldMap.countries[i].linkTypeName );
 
     color.set(worldMap.countries[i].color);
 
@@ -852,8 +860,9 @@ export function createLines(worldMap) {
     } else if(worldMap.selectedCountry && !worldMap.selectedDestinationCountry) {
       if(worldMap.mode === 'destinations') {
         for(c = 0; c < worldMap.countries.length; c++) {
-          if(worldMap.countries[c].visa_required === 'no' || worldMap.countries[c].visa_required === 'on-arrival' || 
-        		  worldMap.countries[c].visa_required === 'free-eu') {
+          if(worldMap.countries[c].linkTypeName === 'no' || 
+        		  worldMap.countries[c].linkTypeName === 'on-arrival' || 
+        		    worldMap.countries[c].linkTypeName === 'free-eu') {
             points2D = [];
             points2D.push( worldMap.selectedCountry.center2D );
             points2D.push( worldMap.countries[c].center2D );
@@ -879,9 +888,9 @@ export function createLines(worldMap) {
     } else if(!worldMap.selectedCountry && worldMap.selectedDestinationCountry) {
       if(worldMap.mode === 'sources') {
         for(c = 0; c < worldMap.countries.length; c++) {
-          if(worldMap.countries[c].visa_required === 'no' || 
-        		  worldMap.countries[c].visa_required === 'on-arrival' || 
-        		  worldMap.countries[c].visa_required === 'free-eu') {
+          if(worldMap.countries[c].linkTypeName === 'no' || 
+        		  worldMap.countries[c].linkTypeName === 'on-arrival' || 
+        		  worldMap.countries[c].linkTypeName === 'free-eu') {
             points2D = [];
             points2D.push( worldMap.selectedDestinationCountry.center2D );
             points2D.push( worldMap.countries[c].center2D );
@@ -933,9 +942,9 @@ export function updateLines(worldMap) {
     for(var c = 0; c < worldMap.countries.length; c++) {
       var offset = worldMap.animationProps.lineAnimateOffset / worldMap.countries[c].splineLength;
 
-      // if(worldMap.countries[c].visa_required === 'no' || 
-      // 	worldMap.countries[c].visa_required === 'on-arrival' || 
-      //    worldMap.countries[c].visa_required === 'free-eu') {
+      // if(worldMap.countries[c].linkTypeName === 'no' || 
+      // 	worldMap.countries[c].linkTypeName === 'on-arrival' || 
+      //    worldMap.countries[c].linkTypeName === 'free-eu') {
       if(worldMap.countries[c].geometrySpline) {
         var subdivisions = 30;
         for(var i = 0; i < subdivisions; i++) {

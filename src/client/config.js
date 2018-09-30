@@ -16,15 +16,15 @@ const config = {
 
   rendererContainer: '#container',
 
-  mapDataFile: cdnURL + 'data/4.1.0/country_data.json?v=' + mapVersion,
+  //mapDataFile: cdnURL + 'data/4.1.0/country_data.json?v=' + mapVersion,
 
   visaRequirementsFile: cdnURL + VISA_REQUIREMENTS_URL,
 
   mergeDataFromMapDataFile2: false,
   mergeDataFromDisputedAreasFile: false,
-  // mapDataFile: cdnURL + 'data/4.1.0/ne_50m_admin_0_countries_simplified.json?v=' + mapVersion,
-  mapDataFile2: cdnURL + 'data/4.1.0/ne_10m_admin_0_countries_simplified.json?v=' + mapVersion, // merge into: ne_50m_admin_0_countries_simplified
-  disputedAreasFile: cdnURL + 'data/4.1.0/ne_10m_admin_0_disputed_areas_simplified.json?v=' + mapVersion,
+  mapDataFile: cdnURL + 'data/4.1.0/ne_50m_admin_0_countries_simplified.json?v=' + mapVersion,
+  //mapDataFile2: cdnURL + 'data/4.1.0/ne_10m_admin_0_countries_simplified.json?v=' + mapVersion, // merge into: ne_50m_admin_0_countries_simplified
+  //disputedAreasFile: cdnURL + 'data/4.1.0/ne_10m_admin_0_disputed_areas_simplified.json?v=' + mapVersion,
 
   saveMapData: false,
   mergedCountriesFilename: 'country_data.json',
@@ -113,40 +113,50 @@ config.materialCountryDefault = new THREE.MeshPhongMaterial({
 // Chrome and Firefox seem to ignore linewidth when using WebGLRenderer:
 config.materialCountryBorder = 
 	new THREE.LineBasicMaterial( { color: 0x18415d, linewidth: 1.5 } );
+
 config.materialCountryBorderDisputed = 
 	new THREE.LineBasicMaterial( { color: 0x444444, linewidth: 2.0 } );
+
 config.materialLineDefault = 
 	new THREE.LineDashedMaterial( { 
 		color: config.colorCountryDefault, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
+
 config.materialLineVisaNotRequired = 
 	new THREE.LineDashedMaterial( { 
 		color: config.colorVisaNotRequired, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
+
 config.materialLineVisaOnArrival = 
 	new THREE.LineDashedMaterial( { 
 		color: config.colorVisaOnArrival, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
+
 config.materialLineVisaETA = 
 	new THREE.LineDashedMaterial( { 
 		color: config.colorVisaETA, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
+
 config.materialLineVisaFreeEU = 
 	new THREE.LineDashedMaterial( { 
 		color: config.colorVisaFreeEU, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
+
 config.materialLineVisaRequired = 
 	new THREE.LineDashedMaterial( { 
 		color: config.colorVisaRequired, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
+
 config.materialLineVisaSpecial = 
 	new THREE.LineDashedMaterial( { 
 		color: config.colorVisaSpecial, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } ); 
+
 config.materialLineVisaAdmissionRefused = 
 	new THREE.LineDashedMaterial( { 
 		color: config.colorVisaAdmissionRefused, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } ); 
+
 config.materialLineVisaDataNotAvailable = 
 	new THREE.LineDashedMaterial( { 
 		color: config.colorVisaDataNotAvailable, 
