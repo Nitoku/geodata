@@ -9,12 +9,25 @@ import { log } from '../LogTerminal';
 
 
 
+/**
+ * 
+ * Loading data: 
+ * 
+ * The function loops over the data from natural earth, then for each country
+ * loops (TODO: instead of a loop a hashMap will be nice...) over all the
+ * user provided data to find if we have country data provided by the user 
+ * need to be added.
+ * 
+ * After the data is aggregated looping over natural earth and then adding user data 
+ * this information is stored on worldMap.countries[] array for application use.  
+ *  
+ */
 export function createCountriesGeometry(worldMap) {
 	
   var data = worldMap.dataCountries;
   var start = Date.now();
   var globalPointCount = 0;
-  var numVisaRequirementsFound = 0;
+  var numUserLinksFound = 0;
 
   worldMap.countriesObject3D = new THREE.Object3D();
   worldMap.countries = [];
@@ -27,6 +40,7 @@ export function createCountriesGeometry(worldMap) {
   var i;
   var destinations;
   for(i = 0; i < data.features.length; i++) {
+	  
     var feature = data.features[i];
 
     if(feature.properties.NAME !== 'Antarctica') { //  && feature.properties.name === 'Germany'
@@ -34,6 +48,7 @@ export function createCountriesGeometry(worldMap) {
       var t = worldMap.geo.path(feature);
 
       if(t !== undefined) {
+    	  
         var shapes = transformSVGPath( t );
 
         var pointCount = 0;
@@ -49,12 +64,12 @@ export function createCountriesGeometry(worldMap) {
           sovereignt: feature.properties.SOVEREIGNT,
           brkName: feature.properties.BRK_NAME, // in disputed areas
           noteBrk: feature.properties.NOTE_BRK, // in disputed areas
-          // emilio added userCountryData will replace the 
+          // Emilio added userData will replace the 
           // current GDP values used on the map
-          userCountryData : 0,
-          gdp: feature.properties.GDP_MD_EST,
-          gdpPerCapita: feature.properties.GDP_PER_CAPITA,
-          population: feature.properties.POP_EST,
+          //gdp: feature.properties.GDP_MD_EST,
+          //will be override later
+          userValue : null,
+          //population: feature.properties.POP_EST,
           type: feature.properties.TYPE,
           disputed: feature.disputed === true,
 
@@ -77,20 +92,28 @@ export function createCountriesGeometry(worldMap) {
         if(!country.disputed) {
         	
           for(var r = 0; r < worldMap.userData.countries.length; r++) {
+        	  
             // 199 nationalities travelling to 243 (?) countries, assuming nationals 
         	// 		from a country don't need a visa to the sovereignty's main country:
             // if(CountryDataHelpers.matchDestinationToCountryName(country.name_long, 
         	//      worldMap.userData.countries[r].name) || 
         	//        CountryDataHelpers.matchDestinationToCountryName(
         	//      worldMap.userData.countries[r].name, country.name)) {
+        	  
             if(CountryDataHelpers.matchDestinationToCountryName(country.sovereignt, 
             		worldMap.userData.countries[r].name) || 
             		CountryDataHelpers.matchDestinationToCountryName(
             				worldMap.userData.countries[r].name, country.sovereignt)) {
-              // log('Loading visa requirements for: ' + country.name);
+              
+              log('geometry.js [createCountriesGeometry()] : ' 
+            		  + 'Loading user data for: ' + country.name);
+              
               country.destinations = worldMap.userData.countries[r].destinations;
-              numVisaRequirementsFound++;
+              country.userValue = worldMap.userData.countries[r].userValue;
+              numUserLinksFound++;
+              
             }
+            
           }
           
         }
@@ -215,23 +238,8 @@ export function createCountriesGeometry(worldMap) {
       if( worldMap.countries[i].numSourcesFreeOrOnArrival > worldMap.maxNumSourcesFreeOrOnArrival ) {
         worldMap.maxNumSourcesFreeOrOnArrival = worldMap.countries[i].numSourcesFreeOrOnArrival;
       }
-      if( worldMap.countries[i].gdp > worldMap.maxGDP ) {
-        worldMap.maxGDP = worldMap.countries[i].gdp;
-      }
-      if( worldMap.countries[i].population > worldMap.maxPopulation ) {
-        worldMap.maxPopulation = worldMap.countries[i].population;
-      }
-      worldMap.totalPopulation += worldMap.countries[i].population;
-      worldMap.countries[i].gdpPerCapita = 
-    	  		worldMap.countries[i].gdp / worldMap.countries[i].population * 1000000;
-      if( worldMap.countries[i].gdpPerCapita > worldMap.maxGDPPerCapita ) {
-        if(worldMap.countries[i].gdp > 100) {
-          worldMap.maxGDPPerCapita = worldMap.countries[i].gdp / worldMap.countries[i].population * 1000000;
-          // log( worldMap.countries[i].name );
-          // log( 'population: ' + worldMap.countries[i].population );
-          // log( 'gdp: ' + worldMap.countries[i].gdp );
-          // log( 'gdp per capita: ' + worldMap.maxGDPPerCapita );
-        }
+      if( worldMap.countries[i].userValue > worldMap.maxValue ) {
+        worldMap.maxValue = worldMap.countries[i].userValue;
       }
     }
   }
@@ -244,16 +252,17 @@ export function createCountriesGeometry(worldMap) {
 
   var stringLoaded = worldMap.countries.length + 
    							' countries and territories loaded (' + 
-  							globalPointCount + ' points total) from \'' + Config.mapDataFile + '\'';
+  							globalPointCount 
+  							+ ' points total) from \'' + Config.mapDataFile + '\'';
   if(Config.mergeDataFromMapDataFile2) {
     stringLoaded += ' and \'' + Config.mapDataFile2 + '\'';
   }
-  log('Geometry: ' + stringLoaded);
+  log('geometry.js [createCountriesGeometry()] : ' + stringLoaded);
 
-  log('Geometry: visa requirements matched from ' + 
+  log('geometry.js [createCountriesGeometry()] : user data links matched from ' + 
 		  worldMap.userData.countries.length + 
-		  ' sovereignties to ' + numVisaRequirementsFound + 
-		  ' countries from \'' + Config.visaRequirementsFile + '\'');
+		  ' sovereignties to ' + numUserLinksFound + 
+		  ' countries');
   // log('Max number of visa-free destinations: ' + worldMap.maxNumDestinationsFreeOrOnArrival);
   // log('Max number of visa-free sources: ' + worldMap.maxNumSourcesFreeOrOnArrival);
   // log('Total population: ' + worldMap.totalPopulation.formatNumber(0));
@@ -276,17 +285,17 @@ export function createCountriesGeometry(worldMap) {
     			worldMap.countries[i].numSourcesFreeOrOnArrival, 
     			worldMap.maxNumSourcesFreeOrOnArrival);
     worldMap.countries[i].colorByGDP = 
-    	CountryDataHelpers.getCountryColorByGDP(
+    	CountryDataHelpers.getCountryColorByUserValue(
     			worldMap.countries[i], 
-    			worldMap.maxGDP);
-    worldMap.countries[i].colorByGDPPerCapita = 
-    	CountryDataHelpers.getCountryColorByGDPPerCapita(
-    			worldMap.countries[i], 
-    			worldMap.maxGDPPerCapita);
-    worldMap.countries[i].colorByPopulation = 
-    	CountryDataHelpers.getCountryColorByPopulation(
-    			worldMap.countries[i],
-    			worldMap.maxPopulation);
+    			worldMap.maxValue);
+//    worldMap.countries[i].colorByGDPPerCapita = 
+//    	CountryDataHelpers.getCountryColorByGDPPerCapita(
+//    			worldMap.countries[i], 
+//    			worldMap.maxGDPPerCapita);
+//    worldMap.countries[i].colorByPopulation = 
+//    	CountryDataHelpers.getCountryColorByPopulation(
+//    			worldMap.countries[i],
+//    			worldMap.maxPopulation);
 
     if(Config.extrudeEnabled) {
       // create extruded geometry from path Shape:
@@ -485,13 +494,13 @@ export function createCountriesGeometry(worldMap) {
     worldMap.scene.add(worldMap.countriesObject3D);
   }
 
-  log('Geometry: ' + worldMap.trianglesNumTotal + ' triangles total');
+  log('geometry.js [createCountriesGeometry()] : ' + worldMap.trianglesNumTotal + ' triangles total');
 
   var scaleStart = 0.0;
   worldMap.countriesObject3D.scale.set(scaleStart, scaleStart, scaleStart);
   worldMap.countriesObject3D.rotation.y = -Math.PI * 6.0;
 
-  log('Geometry: creating meshes took ' + (Date.now() - start) + ' ms');
+  log('geometry.js [createCountriesGeometry()] : ' + (Date.now() - start) + ' ms');
 
 };
 

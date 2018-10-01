@@ -79,16 +79,20 @@ function WorldMap() {
 
   this.inited = false;
 
-  this.mode = 'destinations';
+  //default mode is set here
+  this.mode = 'userValue';
   this.viewMode = '2d';
 
   this.maxNumDestinationsFreeOrOnArrival = 0;
   this.maxNumSourcesFreeOrOnArrival = 0;
-  this.maxGDP = 0;
-  this.maxGDPPerCapita = 0;
-  this.maxPopulation = 0;
-
-  this.totalPopulation = 0;
+  this.maxValue = 0;
+  
+  this.countryValueLabel = '';
+  
+  //this.maxGDPPerCapita = 0;
+  //this.maxPopulation = 0;
+  //this.totalPopulation = 0;
+  
   this.animationProps = {
     interpolatePos: 0.0,
     lineAnimatePos: 0.0,
@@ -144,7 +148,7 @@ WorldMap.prototype = {
       });
       this.renderer.autoClear = false;
       // this.renderer.setClearColor( 0xBBBBBB, 1 );
-      log('WebGLRenderer, pixel ratio used: ' + this.renderer.getPixelRatio());
+      log('index.js [initThree()] : WebGLRenderer, pixel ratio used: ' + this.renderer.getPixelRatio());
       this.renderer.setPixelRatio(window.devicePixelRatio || 1);
 
     } else {
@@ -155,7 +159,7 @@ WorldMap.prototype = {
         clearColor: 0x000000,
         sortObjects: false
       });
-      log('CanvasRenderer');
+      log('index.js [initThree()] : CanvasRenderer');
     }
 
     this.clock = new THREE.Clock();
@@ -259,7 +263,7 @@ WorldMap.prototype = {
 
   createCountries: function() {
 	  
-    log('createCountries()');
+    log('index.js [createCountries()]');
     UI.updateLoadingInfo('Creating map ...');
 
     //emilio
@@ -490,10 +494,10 @@ WorldMap.prototype = {
 
         }
 
-      } else if(this.mode === 'gdp') {
+      } else if(this.mode === 'userValue') {
         if( country === this.selectedCountry ) {
           c.set(Config.colorCountrySelected);
-        } else if(country.gdp > 100) {
+        } else if(country.userValue > 100) {
           c.set(country.colorByGDP);
         } else {
           c.set(Config.colorVisaDataNotAvailable);
@@ -1000,7 +1004,7 @@ WorldMap.prototype = {
         }
 
       } else if(this.selectedCountry && !this.selectedDestinationCountry) {
-        this.selectedCountry.populationReachable = 0;
+        //this.selectedCountry.populationReachable = 0;
         destinations = this.selectedCountry.destinations;
         if( destinations.length > 0 ) {
           for(d = 0; d < destinations.length; d++) {
@@ -1023,11 +1027,11 @@ WorldMap.prototype = {
                 this.countries[c].linkTitle = destinations[d].linkTitle;
                 this.countries[c].notes = destinations[d].notes;
 
-                if(destinations[d].linkTypeName === 'no' || 
-                		destinations[d].linkTypeName === 'on-arrival' || 
-                		destinations[d].linkTypeName === 'free-eu') {
-                  this.selectedCountry.populationReachable += this.countries[c].population;
-                }
+//              if(destinations[d].linkTypeName === 'no' || 
+//                		destinations[d].linkTypeName === 'on-arrival' || 
+//               		destinations[d].linkTypeName === 'free-eu') {
+//                  this.selectedCountry.populationReachable += this.countries[c].population;
+//              }
 
                 found = true;
                 break;
@@ -1155,7 +1159,7 @@ WorldMap.prototype = {
 
       } else if(!this.selectedCountry && this.selectedDestinationCountry) {
 
-        this.selectedDestinationCountry.populationAccepted = 0;
+        //this.selectedDestinationCountry.populationAccepted = 0;
 
         for(i = 0; i < this.countries.length; i++) {
           destinations = this.countries[i].destinations;
@@ -1168,10 +1172,10 @@ WorldMap.prototype = {
               this.countries[i].linkTitle = destinations[d].linkTitle;
               this.countries[i].notes = destinations[d].notes;
 
-              if(destinations[d].linkTypeName === 'no' || destinations[d].linkTypeName === 'on-arrival' || 
-            		  destinations[d].linkTypeName === 'free-eu') {
-                this.selectedDestinationCountry.populationAccepted += this.countries[i].population;
-              }
+              //if(destinations[d].linkTypeName === 'no' || destinations[d].linkTypeName === 'on-arrival' || 
+              //		  destinations[d].linkTypeName === 'free-eu') {
+              //  this.selectedDestinationCountry.populationAccepted += this.countries[i].population;
+              //}
             }
           }
         }
@@ -1212,11 +1216,11 @@ WorldMap.prototype = {
         // nothing selected
       }
 
-    } else if(this.mode === 'gdp') {
+    } else if(this.mode === 'userValue') {
       html = '';
       if(this.selectedCountry) {
-        if(this.selectedCountry.gdp > 100) {
-          value = this.selectedCountry.gdp / 1000;
+        if(this.selectedCountry.userValue > 100) {
+          value = this.selectedCountry.userValue / 1000;
           value = formatNumber(value, 1) + ' Billion USD';
           html += 'GDP of ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) 
           				+ ': ' + value + '<br/>';
@@ -1226,8 +1230,8 @@ WorldMap.prototype = {
         }
       }
       if(this.selectedDestinationCountry) {
-        if(this.selectedDestinationCountry.gdp > 100) {
-          value = this.selectedDestinationCountry.gdp / 1000;
+        if(this.selectedDestinationCountry.userValue > 100) {
+          value = this.selectedDestinationCountry.userValue / 1000;
           value = formatNumber(value, 1) + ' Billion USD';
           html += 'GDP of ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) 
           				+ ': ' + value + '<br/>';
@@ -1294,11 +1298,13 @@ function init() {
   
   worldMap.userData = {
     		"created": "2018-07-01T05:00:01+02:00",
+    		"mode" : "userValue",
     		"type": "userData",
     		"header" : "Header test",
     		"sourcesHeader" : "Sources test",
     		"destinationHeader" : "Destination test",
     		"about" : "About test, all errors are mine...",
+    		"countryValueLabel" : "GDP__",
     		"linkTypes" : [
     			{"name" : "on-arrival",
     			 "color" : "#24292e", // black
@@ -1324,7 +1330,7 @@ function init() {
 							"linkTitle": "Visa required",
 							"notes": "" }],
 				  "userLabel": "mola afghanistan",
-				  "userValue" : "100"
+				  "userValue" : "100000"
 	    		}
 	    	],
 	};
@@ -1340,7 +1346,7 @@ function init() {
     UI.updateLoadingInfo('Loading world map ...');
 
     $.when( $.getJSON(Config.mapDataFile) ).then(function(dataCountries) {
-      log('World map loaded.');
+      log('index.js [init()] World map loaded.');
       worldMap.dataCountries = dataCountries;
 
       /*

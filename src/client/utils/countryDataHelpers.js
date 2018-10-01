@@ -218,8 +218,8 @@ export function getCountryColorByFreeSources(numSources, maxNumSourcesFreeOrOnAr
 };
 
 
-export function getCountryColorByGDP(country, maxGDP) {
-  var m = country.gdp / maxGDP;
+export function getCountryColorByUserValue(country, maxValue) {
+  var m = country.userValue / maxValue;
   m = TWEEN.Easing.Exponential.Out(m);
   var color = new THREE.Color(Config.colorZeroDestinations);
   color.lerp(Config.colorMaxDestinations, m);
@@ -227,29 +227,27 @@ export function getCountryColorByGDP(country, maxGDP) {
 };
 
 
-export function getCountryColorByGDPPerCapita(country, maxGDPPerCapita) {
-  // var m = (country.gdp / country.population * 1000000) / maxGDPPerCapita;
-  var m = country.gdpPerCapita / maxGDPPerCapita;
-  m = TWEEN.Easing.Exponential.Out(m);
-  var color = new THREE.Color(Config.colorZeroDestinations);
-  color.lerp(Config.colorMaxDestinations, m);
-  return color;
-};
-
-
-export function getPopulationRatio(country, maxPopulation) {
-  return parseFloat(country.population) / maxPopulation;    // 1 166 079 220.0;
-};
-
-
-export function getCountryColorByPopulation(country, maxPopulation) {
-  var m = getPopulationRatio(country, maxPopulation);
-  m = TWEEN.Easing.Exponential.Out(m);
-  var color = new THREE.Color(Config.colorZeroDestinations);
-  color.lerp(Config.colorMaxDestinations, m);
-  // color.copyLinearToGamma(color);
-  return color;
-};
+//export function getCountryColorByGDPPerCapita(country, maxGDPPerCapita) {
+//  // var m = (country.userValue / country.population * 1000000) / maxGDPPerCapita;
+//  var m = country.gdpPerCapita / maxGDPPerCapita;
+//  m = TWEEN.Easing.Exponential.Out(m);
+//  var color = new THREE.Color(Config.colorZeroDestinations);
+//  color.lerp(Config.colorMaxDestinations, m);
+//  return color;
+//};
+//
+//
+//export function getPopulationRatio(country, maxPopulation) {
+//  return parseFloat(country.population) / maxPopulation;    // 1 166 079 220.0;
+//};
+//export function getCountryColorByPopulation(country, maxPopulation) {
+//  var m = getPopulationRatio(country, maxPopulation);
+//  m = TWEEN.Easing.Exponential.Out(m);
+//  var color = new THREE.Color(Config.colorZeroDestinations);
+//  color.lerp(Config.colorMaxDestinations, m);
+//  // color.copyLinearToGamma(color);
+//  return color;
+//};
 
 
 export function getCountryVisaTitle(country) {

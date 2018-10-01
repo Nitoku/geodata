@@ -4,8 +4,6 @@ import Detector from './three/Detector';
 const mapVersion = '4.1.0.1';
 const cdnURL = 'https://cdn.markuslerner.com/travelscope/'; // 'http://cdn.markuslerner.com/travelscope/'
 
-
-
 const config = {
   usesWebGL: Detector.webgl,
   isTouchDevice: ('ontouchstart' in document.documentElement),
@@ -71,7 +69,7 @@ const config = {
   colorCountrySelected: new THREE.Color(0x6b9282), //dark green (source country)
   colorVisaOnArrival: new THREE.Color(0x26c400), // light green (destination countries)
   colorVisaRequired: new THREE.Color(0x777777), // light grey (neither of the above)
-  colorZeroDestinations: new THREE.Color(0x242e1d), // 
+   
   colorMaxDestinations: new THREE.Color(0x26c400), //  light green
   
   //Not used by the nitoku travelscope data
@@ -82,6 +80,11 @@ const config = {
   colorVisaAdmissionRefused: new THREE.Color(0xaa0000), //
   colorVisaDataNotAvailable: new THREE.Color(0x444444), // 0xFF00FF
 
+  //note that the colors for countries are automatically calculated
+  //depending on the number of connections/value high value countries
+  //will have a very green color, countries with no values 
+  //will have a dark color
+  colorZeroDestinations: new THREE.Color(0x242e1d), //
   materialSphere: new THREE.MeshPhongMaterial({ 
 	  		color: 0x888888, 
 	  		transparent: false, 
@@ -94,7 +97,7 @@ const config = {
 	  		color: 0xFFFFFF, 
 	  		specular: 0xFFFFFF, 
 	  		shininess: 5, 
-	  		transparent: true, 
+	  		transparent: false, 
 	  		opacity: 0.9, side: 
 	  		THREE.DoubleSide, 
 	  		vertexColors: THREE.VertexColors } )
@@ -112,7 +115,7 @@ config.materialCountryDefault = new THREE.MeshPhongMaterial({
 
 // Chrome and Firefox seem to ignore linewidth when using WebGLRenderer:
 config.materialCountryBorder = 
-	new THREE.LineBasicMaterial( { color: 0x18415d, linewidth: 1.5 } );
+	new THREE.LineBasicMaterial( { color: 0xceedc4, linewidth: 1 } );
 
 config.materialCountryBorderDisputed = 
 	new THREE.LineBasicMaterial( { color: 0x444444, linewidth: 2.0 } );
