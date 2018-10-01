@@ -190,17 +190,18 @@ export function createCountriesGeometry(worldMap) {
     for(i = 0; i < worldMap.countries.length; i++) {
       destinations = worldMap.countries[i].destinations;
 
-      worldMap.countries[i].numDestinationsFreeOrOnArrival = 0;
+      //worldMap.countries[i].numDestinationsFreeOrOnArrival = 0;
+      worldMap.countries[i].numDestinationsFreeOrOnArrival = destinations.length;
       for(d = 0; d < destinations.length; d++) {
-        if(destinations[d].linkTypeName === 'no' || 
-        		destinations[d].linkTypeName === 'on-arrival' || 
-        		   destinations[d].linkTypeName === 'free-eu'
-           // || destinations[d].linkTypeName === 'evisa' || 
-           //			destinations[d].linkTypeName === 'evisitor' || 
-           //	 		destinations[d].linkTypeName === 'eta'
-          ) {
-          worldMap.countries[i].numDestinationsFreeOrOnArrival++;
-        }
+//        if(destinations[d].linkTypeName === 'type1' || 
+//        		destinations[d].linkTypeName === 'on-arrival' || 
+//        		   destinations[d].linkTypeName === 'free-eu'
+//           // || destinations[d].linkTypeName === 'evisa' || 
+//           //			destinations[d].linkTypeName === 'evisitor' || 
+//           //	 		destinations[d].linkTypeName === 'eta'
+//          ) {
+//          worldMap.countries[i].numDestinationsFreeOrOnArrival++;
+//        }
 
       }
 
@@ -222,14 +223,14 @@ export function createCountriesGeometry(worldMap) {
       if(CountryDataHelpers.isCountry(worldMap.countries[i])) {
         destinations = worldMap.countries[i].destinations;
         for(d = 0; d < destinations.length; d++) {
-          if(destinations[d].linkTypeName === 'no' || 
-        		  destinations[d].linkTypeName === 'on-arrival' || 
-        		  destinations[d].linkTypeName === 'free-eu') {
+//          if(destinations[d].linkTypeName === 'type1' || 
+//        		  destinations[d].linkTypeName === 'on-arrival' || 
+//        		  destinations[d].linkTypeName === 'free-eu') {
             country = CountryDataHelpers.getCountryByName(worldMap.countries, destinations[d].d_name);
             if(country !== null) {
               country.numSourcesFreeOrOnArrival++;
             }
-          }
+//        }
         }
       }
     }
@@ -869,9 +870,11 @@ export function createLines(worldMap) {
     } else if(worldMap.selectedCountry && !worldMap.selectedDestinationCountry) {
       if(worldMap.mode === 'destinations') {
         for(c = 0; c < worldMap.countries.length; c++) {
-          if(worldMap.countries[c].linkTypeName === 'no' || 
-        		  worldMap.countries[c].linkTypeName === 'on-arrival' || 
-        		    worldMap.countries[c].linkTypeName === 'free-eu') {
+        	if(worldMap.countries[c].linkTypeName !== "" ){
+        		log("type name: " + worldMap.countries[c].linkTypeName);
+//          if(worldMap.countries[c].linkTypeName === 'no' || 
+//        		  worldMap.countries[c].linkTypeName === 'on-arrival' || 
+//        		    worldMap.countries[c].linkTypeName === 'free-eu') {
             points2D = [];
             points2D.push( worldMap.selectedCountry.center2D );
             points2D.push( worldMap.countries[c].center2D );
@@ -897,9 +900,11 @@ export function createLines(worldMap) {
     } else if(!worldMap.selectedCountry && worldMap.selectedDestinationCountry) {
       if(worldMap.mode === 'sources') {
         for(c = 0; c < worldMap.countries.length; c++) {
-          if(worldMap.countries[c].linkTypeName === 'no' || 
-        		  worldMap.countries[c].linkTypeName === 'on-arrival' || 
-        		  worldMap.countries[c].linkTypeName === 'free-eu') {
+//          if(worldMap.countries[c].linkTypeName === 'no' || 
+//        		  worldMap.countries[c].linkTypeName === 'on-arrival' || 
+//        		  worldMap.countries[c].linkTypeName === 'free-eu') {
+        	if(worldMap.countries[c].linkTypeName !== "" ){
+        		
             points2D = [];
             points2D.push( worldMap.selectedDestinationCountry.center2D );
             points2D.push( worldMap.countries[c].center2D );

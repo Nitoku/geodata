@@ -74,39 +74,61 @@ export function createLegend(worldMap) {
   $('#legend_main .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaDataNotAvailable.getHexString() 
 		  + '"></div><div class="text">Data not available</div></div>');
-
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorCountrySelected.getHexString() 
-		  + '"></div><div class="text">Selected country/nationality</div></div>');
+		  + '"></div><div class="text">Selected country</div></div>');
+  
+  //////////////////// only display configured links ////////////////////////////
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaNotRequired.getHexString() 
-		  + '"></div><div class="text">Visa not required</div></div>');
+		  + '"></div><div class="text">' 
+		  + 'type1' 
+		  + '</div></div>');
+  
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaOnArrival.getHexString() 
-		  + '"></div><div class="text">Visa on arrival</div></div>');
+		  + '"></div><div class="text">' 
+		  + 'type2' 
+		  + '</div></div>');
+  
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaETA.getHexString() 
-		  + '"></div><div class="text">Electronic Travel Authorization</div></div>');
+		  + '"></div><div class="text">' 
+		  + 'type3' 
+		  + '</div></div>');
+  
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaFreeEU.getHexString() 
-		  + '"></div><div class="text">EU freedom of movement</div></div>');
+		  + '"></div><div class="text">' 
+		  + 'type4' 
+		  + '</div></div>');
+  
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
-		  + Config.colorVisaSpecial.getHexString() 
-		  + '"></div><div class="text">Special regulations</div></div>');
+		  + Config.colorVisaRequired.getHexString() 
+		  + '"></div><div class="text">' 
+		  + 'type5' 
+		  + '</div></div>');
+  
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaAdmissionRefused.getHexString() 
-		  + '"></div><div class="text">Admission refused</div></div>');
+		  + '"></div><div class="text">' 
+		  + 'type6'
+		  + '</div></div>');
+  
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #'
-		  + Config.colorVisaRequired.getHexString() 
-		  + '"></div><div class="text">Visa required</div></div>');
+		  + Config.colorVisaSpecial.getHexString() 
+		  + '"></div><div class="text">' 
+		  + 'default' 
+		  + '</div></div>');
+  
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
 		  + Config.colorVisaDataNotAvailable.getHexString() 

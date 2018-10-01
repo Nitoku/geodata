@@ -69,17 +69,15 @@ const config = {
   colorCountrySelected: new THREE.Color(0x6b9282), //dark green (source country)
   colorVisaOnArrival: new THREE.Color(0x26c400), // light green (destination countries)
   colorVisaRequired: new THREE.Color(0x777777), // light grey (neither of the above)
-   
-  colorMaxDestinations: new THREE.Color(0x26c400), //  light green
-  
-  //Not used by the nitoku travelscope data
   colorVisaNotRequired: new THREE.Color(0x6b7e00), // 
   colorVisaETA: new THREE.Color(0xfcff00), // 0xff9000
   colorVisaFreeEU: new THREE.Color(0x0055FF), // 0x0055FF
   colorVisaSpecial: new THREE.Color(0xa52c6d), // 0xff9000
   colorVisaAdmissionRefused: new THREE.Color(0xaa0000), //
   colorVisaDataNotAvailable: new THREE.Color(0x444444), // 0xFF00FF
-
+ 
+  colorMaxDestinations: new THREE.Color(0x26c400), //  light green
+  
   //note that the colors for countries are automatically calculated
   //depending on the number of connections/value high value countries
   //will have a very green color, countries with no values 

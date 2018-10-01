@@ -978,22 +978,23 @@ WorldMap.prototype = {
             }
           }
 
-          // add main sovereignty, if exists:
-          mainCountry = CountryDataHelpers.getCountryByName(this.countries, this.selectedCountry.sovereignt);
-          if(mainCountry && mainCountry.linkTypeName === '') {
-            mainCountry.linkTypeName = 'no';
-            mainCountry.notes = 'National of same sovereignty (exceptions may exist)';
-            this.visaInformationFound = true;
-
-            UI.setHeadline(
-              // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
-              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
-              ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
-              sovereignty +
-              ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
-              sovereigntyDestination +
-              '.<br/><div class="notes">' + this.selectedDestinationCountry.notes + '</div>' );
-          }
+          //make sure that all the links and defaults are included on
+          //the jason data
+//          mainCountry = CountryDataHelpers.getCountryByName(this.countries, this.selectedCountry.sovereignt);
+//          if(mainCountry && mainCountry.linkTypeName === '') {
+//            mainCountry.linkTypeName = 'no';
+//            mainCountry.notes = 'National of same sovereignty (exceptions may exist)';
+//            this.visaInformationFound = true;
+//
+//            UI.setHeadline(
+//              // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
+//              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
+//              ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
+//              sovereignty +
+//              ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
+//              sovereigntyDestination +
+//              '.<br/><div class="notes">' + this.selectedDestinationCountry.notes + '</div>' );
+//          }
 
         } else {
           this.visaInformationFound = false;
@@ -1044,12 +1045,13 @@ WorldMap.prototype = {
           }
 
           // add main sovereignty, if exists:
-          mainCountry = CountryDataHelpers.getCountryByName(this.countries, this.selectedCountry.sovereignt);
-          if(mainCountry && mainCountry.linkTypeName === '') {
-            mainCountry.linkTypeName = 'no';
-            mainCountry.notes = 'National of same sovereignty (exceptions may exist)';
-            this.selectedCountry.populationReachable += mainCountry.population;
-          }
+          //make sure defaults are included on the json that we create
+//          mainCountry = CountryDataHelpers.getCountryByName(this.countries, this.selectedCountry.sovereignt);
+//          if(mainCountry && mainCountry.linkTypeName === '') {
+//            mainCountry.linkTypeName = 'no';
+//            mainCountry.notes = 'National of same sovereignty (exceptions may exist)';
+//            this.selectedCountry.populationReachable += mainCountry.population;
+//          }
 
           // this.selectedCountry.populationPercentage = 
           // Math.round( this.selectedCountry.populationReachable / this.totalPopulation * 100 * 10 ) / 10;
@@ -1133,25 +1135,26 @@ WorldMap.prototype = {
           }
 
           // check, if selected destination country has the same sovereignty
-          if(this.selectedCountry.sovereignt === this.selectedDestinationCountry.sovereignt) {
-            this.selectedDestinationCountry.linkTypeName = 'no';
-            this.selectedDestinationCountry.notes = 'National of same sovereignty (exceptions may exist)';
-            this.visaInformationFound = true;
-            UI.setHeadline(
-              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
-              // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
-              ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
-              sovereignty +
-              ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
-              sovereigntyDestination +
-              '.<br/><div class="notes">' + this.selectedDestinationCountry.notes + '</div>' );
-          }
+//          if(this.selectedCountry.sovereignt === this.selectedDestinationCountry.sovereignt) {
+//            this.selectedDestinationCountry.linkTypeName = 'no';
+//            this.selectedDestinationCountry.notes = 'National of same sovereignty (exceptions may exist)';
+//            this.visaInformationFound = true;
+//            UI.setHeadline(
+//              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
+//              // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
+//              ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
+//              sovereignty +
+//              ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
+//              sovereigntyDestination +
+//              '.<br/><div class="notes">' + this.selectedDestinationCountry.notes + '</div>' );
+//          }
 
         } else {
           this.visaInformationFound = false;
           UI.setHeadline( 'Data not available for ' + this.connectionLabel +' from ' + 
         		  CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) + 
-        		  '. <div class="notes">Please select a different country or click/tap the background to clear selection.</div>' );
+        		  '. <div class="notes">Please select a different country or'
+        		      +' click/tap the background to clear selection.</div>' );
 
         }
 
@@ -1182,15 +1185,15 @@ WorldMap.prototype = {
         this.visaInformationFound = true;
 
         // add all countries width same sovereignty like destination country:
-        var countries = CountryDataHelpers.getAllCountriesWithSameSovereignty(this.countries, 
-        												this.selectedDestinationCountry.sovereignt);
-        for(i = 0; i < countries.length; i++) {
-          if(countries[i].linkTypeName === '') {
-            countries[i].linkTypeName = 'no';
-            countries[i].notes = 'National of same sovereignty (exceptions may exist)';
-            this.selectedDestinationCountry.populationAccepted += countries[i].population;
-          }
-        }
+//        var countries = CountryDataHelpers.getAllCountriesWithSameSovereignty(this.countries, 
+//        												this.selectedDestinationCountry.sovereignt);
+//        for(i = 0; i < countries.length; i++) {
+//          if(countries[i].linkTypeName === '') {
+//            countries[i].linkTypeName = 'no';
+//            countries[i].notes = 'National of same sovereignty (exceptions may exist)';
+//            this.selectedDestinationCountry.populationAccepted += countries[i].population;
+//          }
+//        }
 
         // var populationPercentage = 
         //		Math.round( this.selectedDestinationCountry.populationAccepted / this.totalPopulation * 100 * 10 ) / 10;
@@ -1305,11 +1308,11 @@ function init() {
     		"destinationHeader" : "Destination test",
     		"about" : "About test, all errors are mine...",
     		"countryValueLabel" : "GDP__",
-    		"linkTypes" : [
-    			{"name" : "on-arrival",
+    		"linkTypes"  : [
+    			{"name"  : "type1",
     			 "color" : "#24292e", // black
     			 "label" : "Enlace molon 1"},
-     			{"name" : "free-eu",
+     			{"name"  : "type2",
         		 "color" : "#faebd7", // orange
         		 "label" : "Enlace molon 2"}
     		],
@@ -1317,18 +1320,44 @@ function init() {
 	    		{ "name": "Afghanistan", 
 	    		  "code": "AFG", 
 	    		  "destinations": [	
+	    			  
 							{ "d_name": "Algeria",
-							"linkTypeName": "on-arrival",
-							"linkTitle": "Visa required",
-							"notes": "|" },	
+							"linkTypeName": "type1",
+							"linkTitle": "test algeria Visa required",
+							"notes": "| notes algeria " },
+							
 							{ "d_name": "Andorra",
-							"linkTypeName": "on-arrival",
-							"linkTitle": "Visa required",
-							"notes": "|" },	
+							"linkTypeName": "type2",
+							"linkTitle": "title andorra",
+							"notes": "notes andorra | " },	
+							
+							{ "d_name": "France",
+								"linkTypeName": "type3",
+								"linkTitle": "title france",
+								"notes": "notes france | " },
+
+							{ "d_name": "Spain",
+								"linkTypeName": "type4",
+								"linkTitle": "title spain",
+								"notes": "notes spain | " },
+
+							{ "d_name": "Italy",
+								"linkTypeName": "type5",
+								"linkTitle": "title italy",
+								"notes": "notes italy | " },
+									
 							{ "d_name": "Angola",
-							"linkTypeName": "on-arrival",
-							"linkTitle": "Visa required",
-							"notes": "" }],
+							"linkTypeName": "type6",								
+							"linkTitle": " test angola Visa required",
+							"notes": " notes angola " },
+
+							{ "d_name": "Germany",
+								//"linkTypeName": "type6",								
+								"linkTitle": " test germany Visa required",
+								"notes": " notes germany " }
+
+								],
+							
 				  "userLabel": "mola afghanistan",
 				  "userValue" : "100000"
 	    		}

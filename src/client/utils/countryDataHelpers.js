@@ -142,30 +142,35 @@ export function correctCenter(country) {
 
 export function getCountryColorByVisaStatus(country) {
   var c;
-  if(country.linkTypeName === 'no') {
+  //if(country.linkTypeName === 'no') {
+  if(country.linkTypeName === 'type1') {
     c = Config.colorVisaNotRequired;
 
-  } else if(country.linkTypeName === 'on-arrival') {
+  //} else if(country.linkTypeName === 'on-arrival') {
+  } else if(country.linkTypeName === 'type2') {
     c = Config.colorVisaOnArrival;
 
-  } else if(country.linkTypeName === 'eta') {
+  //} else if(country.linkTypeName === 'eta') {
+  } else if(country.linkTypeName === 'type3') {
     c = Config.colorVisaETA;
 
-  } else if(country.linkTypeName === 'free-eu') {
+  //} else if(country.linkTypeName === 'free-eu') {
+  } else if(country.linkTypeName === 'type4') {
     c = Config.colorVisaFreeEU;
 
-  } else if(country.linkTypeName === 'yes') {
+  //} else if(country.linkTypeName === 'yes') {
+  } else if(country.linkTypeName === 'type5') {
     c = Config.colorVisaRequired;
 
-  } else if(country.linkTypeName === 'admission-refused') {
+  //} else if(country.linkTypeName === 'admission-refused') {
+  } else if(country.linkTypeName === 'type6') {
     c = Config.colorVisaAdmissionRefused;
 
   } else if(country.linkTypeName === '') {
-    c = Config.colorVisaDataNotAvailable;
-
-  } else { // special
+	c = Config.colorVisaDataNotAvailable;
+  } else { 
+	// the type has not been set on the link data structure
     c = Config.colorVisaSpecial;
-
   }
   return c;
 };
@@ -174,22 +179,27 @@ export function getCountryColorByVisaStatus(country) {
 export function getLineMaterial(country) {
   var material = Config.materialLineDefault;
 
-  if(country.linkTypeName === 'no') {
+  if(country.linkTypeName === 'type1') {
     material = Config.materialLineVisaNotRequired;
-
-  } else if(country.linkTypeName === 'on-arrival') {
+    
+  } else if(country.linkTypeName === 'type2') {
+  //} else if(country.linkTypeName === 'on-arrival') {
     material = Config.materialLineVisaOnArrival;
 
-  } else if(country.linkTypeName === 'eta') {
+  } else if(country.linkTypeName === 'type3') {
+  //} else if(country.linkTypeName === 'eta') {
     material = Config.materialLineVisaETA;
-
-  } else if(country.linkTypeName === 'free-eu') {
+    
+  } else if(country.linkTypeName === 'type4') {
+  //} else if(country.linkTypeName === 'free-eu') {
     material = Config.materialLineVisaFreeEU;
 
-  } else if(country.linkTypeName === 'yes') {
+  } else if(country.linkTypeName === 'type5') {
+  //} else if(country.linkTypeName === 'yes') {
     material = Config.materialLineVisaRequired;
 
-  } else if(country.linkTypeName === 'admission-refused') {
+  } else if(country.linkTypeName === 'type6') {
+  //} else if(country.linkTypeName === 'admission-refused') {
     material = Config.materialLineVisaAdmissionRefused;
 
   } else if(country.linkTypeName === '') {
@@ -265,30 +275,30 @@ export function getCountryVisaTitle(country) {
 export function getCountryDetailsByVisaStatus(country) {
   var details = '';
 
-  if(country.linkTypeName === 'no') {
-    details = 'Visa not required';
-
-  } else if(country.linkTypeName === 'on-arrival') {
-    details = 'Visa on arrival';
-
-  } else if(country.linkTypeName === 'free-eu') {
-    details = 'Visa not required (EU)';
-
-  } else if(country.linkTypeName === 'yes') {
-    details = 'Visa required';
-
-  } else if(country.linkTypeName === 'admission-refused') {
-    details = 'Admission refused';
-
-  } else if(country.linkTypeName === 'special') {
-    details = 'Special regulations';
-
-  } else if(country.linkTypeName === '') { // data not available
-    details = 'Data not available';
-
-  } else { // special
-    details = country.linkTypeName;
-
-  }
-  return details;
+//  if(country.linkTypeName === 'no') {
+//    details = 'Visa not required';
+//
+//  } else if(country.linkTypeName === 'on-arrival') {
+//    details = 'Visa on arrival';
+//
+//  } else if(country.linkTypeName === 'free-eu') {
+//    details = 'Visa not required (EU)';
+//
+//  } else if(country.linkTypeName === 'yes') {
+//    details = 'Visa required';
+//
+//  } else if(country.linkTypeName === 'admission-refused') {
+//    details = 'Admission refused';
+//
+//  } else if(country.linkTypeName === 'special') {
+//    details = 'Special regulations';
+//
+//  } else if(country.linkTypeName === '') { // data not available
+//    details = 'Data not available';
+//
+//  } else { // special
+//    details = country.linkTypeName;
+//
+//  }
+  return country.notes;
 };
