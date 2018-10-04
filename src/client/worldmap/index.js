@@ -1332,8 +1332,8 @@ function init() {
     		
     		//--------------------------------------
     		
-    		"connectionToLabel" : "_has connections to",
-    		"connectionFromLabel" : "_has connections from",
+    		"connectionToLabel" : " has migrants going to",
+    		"connectionFromLabel" : "has migrants from",
     		"preLabel": "_Total inmigration in ",
 			"postLabel": "_foreigners",
 			  
@@ -1362,7 +1362,7 @@ function init() {
 	    			  
 							{ "d_name": "Algeria",
 							"linkTypeName": "type1",
-							"linkTitle": "test algeria Visa required",
+							"linkTitle": "test algeria",
 							"notes": "| notes algeria " },
 							
 							{ "d_name": "Andorra",
@@ -1385,11 +1385,11 @@ function init() {
 								"notes": "notes italy | " },
 									
 							{ "d_name": "Angola",
-								"linkTitle": " test angola Visa required",
+								"linkTitle": " test angola",
 								"notes": " notes angola " },
 
 							{ "d_name": "Germany",
-								"linkTitle": " test germany Visa required",
+								"linkTitle": " test germany",
 								"notes": " notes germany " }
 								]
 	    		}
@@ -1402,7 +1402,15 @@ function init() {
 	}else{
 		$('.navbar-brand').html("Geodata");
 	}
-  
+
+  	if(worldMap.userData.about !== null && 
+  	  		worldMap.userData.about !== undefined ){
+  	    $('#about-content').html(worldMap.userData.about); 
+  	}else{
+  		$('#about-content').html("Thank you for using this block, you can find more information" +
+  				" about how you can use it here : http://www.nitoku.com/@nitoku.public/geodata");
+	}
+
   	//configure link colors
   	for (var i in worldMap.userData.linkTypes)
     {
@@ -1496,6 +1504,7 @@ function init() {
     }
 
     
+    
     if(Config.sphereEnabled) {
       Geometry.createSphere(worldMap);
     }
@@ -1504,7 +1513,7 @@ function init() {
     UI.updateLoadingInfo('Loading world map ...');
 
     $.when( $.getJSON(Config.mapDataFile) ).then(function(dataCountries) {
-      log('index.js [init()] World map loaded.');
+      //log('index.js [init()] World map loaded.');
       worldMap.dataCountries = dataCountries;
 
       /*

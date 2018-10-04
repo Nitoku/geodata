@@ -567,13 +567,13 @@ b {
     position: absolute;
     top: 0;
     left: 0;
-    color: #bbb;
+    color: #676a6c;
     cursor: pointer;
     pointer-events: auto;
   }
 
   li:hover, li.selected, li.hover {
-    color: #fff;
+    color: #333;
   }
 
   li .container {
