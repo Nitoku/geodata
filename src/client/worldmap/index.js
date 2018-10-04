@@ -1317,9 +1317,7 @@ function init() {
   
   worldMap.userData = {
 		  
-    		"created": "2018-07-01T05:00:01+02:00",
     		"mode" : "userValue",
-    		"type": "userData",
     		"about" : "About test, all errors are mine...",
 
     		//----- Application header

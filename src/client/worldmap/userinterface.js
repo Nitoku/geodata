@@ -255,8 +255,9 @@ export function createCountryList(worldMap) {
 	
   $('body').append('<div id="country_list_container"><ul id="country_list"></ul></div>');
 
-  var count = 0;
+  //var count = 0;
   for(var i = 0; i < worldMap.countries.length; i++) {
+	  
     var country = worldMap.countries[i];
     var name = country.name;
 
@@ -266,7 +267,7 @@ export function createCountryList(worldMap) {
       // console.log(country.type);
     // }
 
-    // add only proper countries:
+    // add only countries with data:
     if(CountryDataHelpers.isCountry(country)) {
     	
       var li = $('<li><div class="container"><span class="box"></span><span class="number">'
@@ -289,12 +290,12 @@ export function createCountryList(worldMap) {
 
       li.data('country', country);
       country.listItem = li;
-
-      count++;
+      //count++;
+      
     }
   }
-  $('#button_country_list .title').html('Countries (' + count + ')');
-
+  
+  
   $('#country_list li').click(function(event) {
     var selectedCountryNew = $(this).data('country');
 
@@ -331,7 +332,8 @@ export function createCountryList(worldMap) {
 
         worldMap.listHover = true;
         worldMap.updateCountryHover(country);
-        if(!worldMap.geometryNeedsUpdate && (worldMap.intersectedObjectBefore !== worldMap.intersectedObject) ) {
+        if(!worldMap.geometryNeedsUpdate && 
+        		(worldMap.intersectedObjectBefore !== worldMap.intersectedObject) ) {
           worldMap.updateAllCountryColors();
         }
       }
@@ -362,7 +364,7 @@ export function createCountryList(worldMap) {
 export function updateCountryList(worldMap) {
   // log('updateCountryList()');
 
-  if($('#country_list').is(':visible')) {
+  //if($('#country_list').is(':visible')) {
 
     if(worldMap.mode === 'destinations') {
 
@@ -384,8 +386,9 @@ export function updateCountryList(worldMap) {
       sortCountryListByUserValue();
 
     }
-  }
-
+    
+  //}
+  
   $('#country_list').scrollTop(0);
 
 };
@@ -422,6 +425,7 @@ function sortCountryListByName() {
 function sortCountryListByFreeDestinations() {
   
   log("sort by destination");
+  var count = 0;
   
   var newSorting = 'destinations';
   if(countryListSorting !== newSorting) {
@@ -446,25 +450,31 @@ function sortCountryListByFreeDestinations() {
       //                      worldMap.maxNumDestinationsFreeOrOnArrival * 200);
       var num = country.numDestinationsFreeOrOnArrival;
       if(country.destinations.length === 0) {
-        num = '?';
-        rank = '?';
+        //num = '?';
+        //rank = '?';
+        $(this).hide();
       } else {
+    	
+    	count++;
+    	  
         if(num < destinationsNum) {
           rank++;
           destinationsNum = num;
         }
+        
+        // $(this).find('.box').data('width', width);
+        // $(this).find('.box').css('width', width + 'px');
+        $(this).find('.box').css('background-color', '#' + country.colorByFreeDestinations.getHexString());
+        $(this).find('.number').html(num);
+        $(this).find('.text').html( rank + '. ' + $(this).data('country').name );
+        $(this).show();
       }
 
-      // $(this).find('.box').data('width', width);
-      // $(this).find('.box').css('width', width + 'px');
-      $(this).find('.box').css('background-color', '#' + country.colorByFreeDestinations.getHexString());
-      $(this).find('.number').html(num);
-
-      $(this).find('.text').html( rank + '. ' + $(this).data('country').name );
 
     });
 
     repositionCountryList(li);
+    $('#button_country_list .title').html('Countries (' + count + ')');
   }
 }
 
@@ -530,7 +540,8 @@ function sortCountryListByFreeDestinations() {
 function sortCountryListByFreeSources() {
 	
   log("sort by source");
-	
+  var count = 0;
+  
   var newSorting = 'sources';
   if(countryListSorting !== newSorting) {
     countryListSorting = newSorting;
@@ -550,6 +561,7 @@ function sortCountryListByFreeSources() {
     var sourcesNum = 100000;
     var rank = 0;
     li.each(function(index) {
+
       var country = $(this).data('country');
       // var width = parseInt(country.numSourcesFreeOrOnArrival / worldMap.maxNumSourcesFreeOrOnArrival * 200);
       var num = country.numSourcesFreeOrOnArrival;
@@ -561,27 +573,38 @@ function sortCountryListByFreeSources() {
         sourcesNum = num;
       }
 
-      $(this).find('.box').css('background-color', '#' + country.colorByFreeSources.getHexString());
-      $(this).find('.number').html(num);
-
-      $(this).find('.text').html( rank + '. ' + $(this).data('country').name );
-
+      if(num === 0 ){
+    	  $(this).hide();
+      }else{
+	      $(this).find('.box').css('background-color', 
+	    		  '#' + country.colorByFreeSources.getHexString());
+	      $(this).find('.number').html(num);
+	      $(this).find('.text').html( rank + '. ' 
+	    		  + $(this).data('country').name );
+	      $(this).show();
+	      count++;
+      }
     });
 
     repositionCountryList(li);
+    $('#button_country_list .title').html('Countries (' + count + ')');
+    
   }
+  
 }
 
 
 function sortCountryListByUserValue() {
   
  //log("sort by userValue");
-	
   var newSorting = 'userValue';
+  
   if(countryListSorting !== newSorting) {
+	  
     countryListSorting = newSorting;
 
     var li = $('#country_list').children('li');
+    
     li.sort(function(a, b) {
       var aName = $(a).data('country').userValue;
       var bName = $(b).data('country').userValue;
@@ -592,28 +615,33 @@ function sortCountryListByUserValue() {
     $('#country_list').removeClass('narrownumbers');
     $('#country_list').addClass('widenumbers');
 
+    var count = 0;
+    
     li.each(function(index) {
+     
       var country = $(this).data('country');
       var num = Math.round(country.userValue);
-      if(num > 1000) {
-        num /= 1000;
-        num = formatNumber(num, 0) + ' b USD';
-      } else {
-        num = formatNumber(num, 0) + ' m USD';
+      if(num > 0) {
+    	  $(this).show();
+          $(this).find('.number').html(num);
+          $(this).find('.text').html( (index + 1) + '. ' + $(this).data('country').name );
+          count++;
+      }else{
+    	  $(this).hide();
       }
-      $(this).find('.number').html(num);
-
-      $(this).find('.text').html( (index + 1) + '. ' + $(this).data('country').name );
 
     });
 
     repositionCountryList(li);
+    $('#button_country_list .title').html('Countries (' + count + ')');
+    
   }
 }
 
 
 function repositionCountryList(li) {
-  var top = 0;
+  
+	var top = 0;
 
   if($('#country_list').is(':visible')) {
     $('#country_list li').css('transition', 'top 0.5s ease-out');
