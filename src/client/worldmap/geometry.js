@@ -79,7 +79,11 @@ export function createCountriesGeometry(worldMap) {
           numDestinationsFreeOrOnArrival: 0,
           numSourcesFreeOrOnArrival: 0,
           color: new THREE.Color(Config.colorCountryDefault),
-          colorLast: new THREE.Color(Config.colorCountryDefault)
+          colorLast: new THREE.Color(Config.colorCountryDefault),
+        
+		  preLabel : "",
+		  postLabel : "",
+		  
         
         };
 
@@ -110,6 +114,9 @@ export function createCountriesGeometry(worldMap) {
               
               country.destinations = worldMap.userData.countries[r].destinations;
               country.userValue = worldMap.userData.countries[r].userValue;
+              country.preLabel = worldMap.userData.preLabel;
+              country.postLabel = worldMap.userData.postLabel;
+              
               numUserLinksFound++;
               
             }
@@ -870,11 +877,14 @@ export function createLines(worldMap) {
     } else if(worldMap.selectedCountry && !worldMap.selectedDestinationCountry) {
       if(worldMap.mode === 'destinations') {
         for(c = 0; c < worldMap.countries.length; c++) {
+        	
         	if(worldMap.countries[c].linkTypeName !== "" ){
-        		log("type name: " + worldMap.countries[c].linkTypeName);
-//          if(worldMap.countries[c].linkTypeName === 'no' || 
-//        		  worldMap.countries[c].linkTypeName === 'on-arrival' || 
-//        		    worldMap.countries[c].linkTypeName === 'free-eu') {
+        		
+			//   log("type name: " + worldMap.countries[c].linkTypeName);
+			//   if(worldMap.countries[c].linkTypeName === 'no' || 
+			//   worldMap.countries[c].linkTypeName === 'on-arrival' || 
+			//   worldMap.countries[c].linkTypeName === 'free-eu') {
+        		
             points2D = [];
             points2D.push( worldMap.selectedCountry.center2D );
             points2D.push( worldMap.countries[c].center2D );

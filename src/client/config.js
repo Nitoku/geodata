@@ -5,6 +5,7 @@ const mapVersion = '4.1.0.1';
 const cdnURL = 'https://cdn.markuslerner.com/travelscope/'; // 'http://cdn.markuslerner.com/travelscope/'
 
 const config = {
+		
   usesWebGL: Detector.webgl,
   isTouchDevice: ('ontouchstart' in document.documentElement),
   isMac: navigator.platform.toUpperCase().indexOf('MAC') >= 0,
@@ -21,8 +22,9 @@ const config = {
   mergeDataFromMapDataFile2: false,
   mergeDataFromDisputedAreasFile: false,
   mapDataFile: cdnURL + 'data/4.1.0/ne_50m_admin_0_countries_simplified.json?v=' + mapVersion,
-  //mapDataFile2: cdnURL + 'data/4.1.0/ne_10m_admin_0_countries_simplified.json?v=' + mapVersion, // merge into: ne_50m_admin_0_countries_simplified
-  //disputedAreasFile: cdnURL + 'data/4.1.0/ne_10m_admin_0_disputed_areas_simplified.json?v=' + mapVersion,
+  //merge into: ne_50m_admin_0_countries_simplified
+  mapDataFile2: cdnURL + 'data/4.1.0/ne_10m_admin_0_countries_simplified.json?v=' + mapVersion, 
+  disputedAreasFile: cdnURL + 'data/4.1.0/ne_10m_admin_0_disputed_areas_simplified.json?v=' + mapVersion,
 
   saveMapData: false,
   mergedCountriesFilename: 'country_data.json',
@@ -65,24 +67,42 @@ const config = {
   sphereEnabled: false,
   sphereVisible: false,
 
-  colorCountryDefault: new THREE.Color(0x777777), //standard grey
-  colorCountrySelected: new THREE.Color(0x6b9282), //dark green (source country)
-  colorVisaOnArrival: new THREE.Color(0x26c400), // light green (destination countries)
-  colorVisaRequired: new THREE.Color(0x777777), // light grey (neither of the above)
-  colorVisaNotRequired: new THREE.Color(0x6b7e00), // 
-  colorVisaETA: new THREE.Color(0xfcff00), // 0xff9000
-  colorVisaFreeEU: new THREE.Color(0x0055FF), // 0x0055FF
-  colorVisaSpecial: new THREE.Color(0xa52c6d), // 0xff9000
-  colorVisaAdmissionRefused: new THREE.Color(0xaa0000), //
-  colorVisaDataNotAvailable: new THREE.Color(0x444444), // 0xFF00FF
+  //colorCountryDefault: new THREE.Color(0x777777), //standard grey
+  colorCountryDefault: new THREE.Color("#777777"), //standard grey
+  colorCountrySelected: new THREE.Color("#6b9282"), //dark green (source country)
+  
+  //type 2 light green (destination countries)
+  colorType2: new THREE.Color("#a52c6d"),
+  
+  //type 5 light grey (neither of the above)
+  colorType5: new THREE.Color("#777777"),
+  
+  //type 1 dark brownish-green
+  colorType1: new THREE.Color("#6b7e00"),
+  
+  //type 3 yellow
+  colorType3: new THREE.Color("#fcff00"), // 0xff9000
+  
+  //type 4 blue 
+  colorType4: new THREE.Color("#0055FF"), // 0x0055FF
+  
+  //default : 
+  //  no link data (but we have the country on defined by user data)
+  colorLinkTypeNotDefined: new THREE.Color("#26c400"), // 0xff9000
+  
+  //type 6 red
+  colorType6: new THREE.Color("#aa0000"), //
+  
+  //no data
+  colorDataNotAvailable: new THREE.Color("#444444"), // 0xFF00FF
  
-  colorMaxDestinations: new THREE.Color(0x26c400), //  light green
+  colorMaxDestinations: new THREE.Color("#26c400"), //  light green
   
   //note that the colors for countries are automatically calculated
   //depending on the number of connections/value high value countries
   //will have a very green color, countries with no values 
   //will have a dark color
-  colorZeroDestinations: new THREE.Color(0x242e1d), //
+  colorZeroDestinations: new THREE.Color("#242e1d"), //
   materialSphere: new THREE.MeshPhongMaterial({ 
 	  		color: 0x888888, 
 	  		transparent: false, 
@@ -123,44 +143,44 @@ config.materialLineDefault =
 		color: config.colorCountryDefault, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
 
-config.materialLineVisaNotRequired = 
+config.materialLineType1 = 
 	new THREE.LineDashedMaterial( { 
-		color: config.colorVisaNotRequired, 
+		color: config.colorType1, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
 
-config.materialLineVisaOnArrival = 
+config.materialLineType2 = 
 	new THREE.LineDashedMaterial( { 
-		color: config.colorVisaOnArrival, 
+		color: config.colorType2, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
 
-config.materialLineVisaETA = 
+config.materialLineType3 = 
 	new THREE.LineDashedMaterial( { 
-		color: config.colorVisaETA, 
+		color: config.colorType3, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
 
-config.materialLineVisaFreeEU = 
+config.materialLineType4 = 
 	new THREE.LineDashedMaterial( { 
-		color: config.colorVisaFreeEU, 
+		color: config.colorType4, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
 
-config.materialLineVisaRequired = 
+config.materialLineType5 = 
 	new THREE.LineDashedMaterial( { 
-		color: config.colorVisaRequired, 
+		color: config.colorType5, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } );
 
-config.materialLineVisaSpecial = 
+config.materialLineLinkTypeNotDefined = 
 	new THREE.LineDashedMaterial( { 
-		color: config.colorVisaSpecial, 
+		color: config.colorLinkTypeNotDefined, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } ); 
 
-config.materialLineVisaAdmissionRefused = 
+config.materialLineType6 = 
 	new THREE.LineDashedMaterial( { 
-		color: config.colorVisaAdmissionRefused, 
+		color: config.colorType6, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } ); 
 
-config.materialLineVisaDataNotAvailable = 
+config.materialLineDataNotAvailable = 
 	new THREE.LineDashedMaterial( { 
-		color: config.colorVisaDataNotAvailable, 
+		color: config.colorDataNotAvailable, 
 		linewidth: 1.2, dashSize: 3, gapSize: 2, opacity: 0.5, transparent: true } ); 
 
 

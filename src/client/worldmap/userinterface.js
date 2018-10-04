@@ -21,6 +21,7 @@ var countryListSorting = '';
 var uiReady = false;
 
 export function init(worldMap) {
+
   createLegend(worldMap);
   updateLegend(worldMap);
 
@@ -34,6 +35,8 @@ export function init(worldMap) {
   bindEventHandlers();
 
   closeLoadingInfo();
+ 
+  
 };
 
 
@@ -72,7 +75,7 @@ export function createLegend(worldMap) {
 		  + Config.colorMaxDestinations.getHexString() + '\',GradientType=1 )'); /* IE6-9 */
 
   $('#legend_main .colors').append('<div class="color no-data"><div class="box" style="background-color: #' 
-		  + Config.colorVisaDataNotAvailable.getHexString() 
+		  + Config.colorDataNotAvailable.getHexString() 
 		  + '"></div><div class="text">Data not available</div></div>');
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
@@ -80,58 +83,99 @@ export function createLegend(worldMap) {
 		  + '"></div><div class="text">Selected country</div></div>');
   
   //////////////////// only display configured links ////////////////////////////
+  var hasType1 = false;
+  var hasType2 = false;
+  var hasType3 = false;
+  var hasType4 = false;
+  var hasType5 = false;
+  var hasType6 = false;
+  
+  for (var i in worldMap.userData.linkTypes)
+  {
+	 if(worldMap.userData.linkTypes[i].name === "type1"){
+		 hasType1 = true;
+	 }
+	 if(worldMap.userData.linkTypes[i].name === "type2"){
+		 hasType2 = true;
+	 } 
+	 if(worldMap.userData.linkTypes[i].name === "type3"){
+		 hasType3 = true;
+	 } 
+	 if(worldMap.userData.linkTypes[i].name === "type4"){
+		 hasType4 = true;
+	 } 
+	 if(worldMap.userData.linkTypes[i].name === "type5"){
+		 hasType5 = true;
+	 } 
+	 if(worldMap.userData.linkTypes[i].name === "type6"){
+		 hasType6 = true;
+	 }
+	 
+  }
+  if(hasType1){
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
-		  + Config.colorVisaNotRequired.getHexString() 
+		  + Config.colorType1.getHexString() 
 		  + '"></div><div class="text">' 
-		  + 'type1' 
+		  + worldMap.userData.linkTypes[0].label 
 		  + '</div></div>');
+  }
+  
+  if(hasType2){
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorType2.getHexString() 
+		  + '"></div><div class="text">' 
+		  + worldMap.userData.linkTypes[1].label
+		  + '</div></div>');
+  }
+  
+  if(hasType3){
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorType3.getHexString() 
+		  + '"></div><div class="text">' 
+		  + worldMap.userData.linkTypes[2].label
+		  + '</div></div>');
+  }
+  
+  if(hasType4){
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorType4.getHexString() 
+		  + '"></div><div class="text">' 
+		  + worldMap.userData.linkTypes[3].label
+		  + '</div></div>');
+  }
+  
+  if(hasType5){
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorType5.getHexString() 
+		  + '"></div><div class="text">' 
+		  + worldMap.userData.linkTypes[4].label
+		  + '</div></div>');
+  }
+  
+  if(hasType6){
+  $('#legend_selected .colors').append(
+		  '<div class="color no-data"><div class="box" style="background-color: #' 
+		  + Config.colorType6.getHexString() 
+		  + '"></div><div class="text">' 
+		  + worldMap.userData.linkTypes[5].label
+		  + '</div></div>');
+  }
+  
+//  $('#legend_selected .colors').append(
+//		  '<div class="color no-data"><div class="box" style="background-color: #'
+//		  + Config.colorLinkTypeNotDefined.getHexString() 
+//		  + '"></div><div class="text">' 
+//		  + 'default' 
+//		  + '</div></div>');
   
   $('#legend_selected .colors').append(
 		  '<div class="color no-data"><div class="box" style="background-color: #' 
-		  + Config.colorVisaOnArrival.getHexString() 
-		  + '"></div><div class="text">' 
-		  + 'type2' 
-		  + '</div></div>');
-  
-  $('#legend_selected .colors').append(
-		  '<div class="color no-data"><div class="box" style="background-color: #' 
-		  + Config.colorVisaETA.getHexString() 
-		  + '"></div><div class="text">' 
-		  + 'type3' 
-		  + '</div></div>');
-  
-  $('#legend_selected .colors').append(
-		  '<div class="color no-data"><div class="box" style="background-color: #' 
-		  + Config.colorVisaFreeEU.getHexString() 
-		  + '"></div><div class="text">' 
-		  + 'type4' 
-		  + '</div></div>');
-  
-  $('#legend_selected .colors').append(
-		  '<div class="color no-data"><div class="box" style="background-color: #' 
-		  + Config.colorVisaRequired.getHexString() 
-		  + '"></div><div class="text">' 
-		  + 'type5' 
-		  + '</div></div>');
-  
-  $('#legend_selected .colors').append(
-		  '<div class="color no-data"><div class="box" style="background-color: #' 
-		  + Config.colorVisaAdmissionRefused.getHexString() 
-		  + '"></div><div class="text">' 
-		  + 'type6'
-		  + '</div></div>');
-  
-  $('#legend_selected .colors').append(
-		  '<div class="color no-data"><div class="box" style="background-color: #'
-		  + Config.colorVisaSpecial.getHexString() 
-		  + '"></div><div class="text">' 
-		  + 'default' 
-		  + '</div></div>');
-  
-  $('#legend_selected .colors').append(
-		  '<div class="color no-data"><div class="box" style="background-color: #' 
-		  + Config.colorVisaDataNotAvailable.getHexString() 
+		  + Config.colorDataNotAvailable.getHexString() 
 		  + '"></div><div class="text">Data not available</div></div>');
 
 };
@@ -337,7 +381,7 @@ export function updateCountryList(worldMap) {
       }
 
     } else if(worldMap.mode === 'userValue') {
-      sortCountryListByGDP();
+      sortCountryListByUserValue();
 
     }
   }
@@ -529,9 +573,9 @@ function sortCountryListByFreeSources() {
 }
 
 
-function sortCountryListByGDP() {
+function sortCountryListByUserValue() {
   
- log("sort by userValue");
+ //log("sort by userValue");
 	
   var newSorting = 'userValue';
   if(countryListSorting !== newSorting) {
@@ -962,10 +1006,12 @@ export function updateCountryTooltip(worldMap, country) {
           if(worldMap.visaInformationFound) {
             $('#country-tooltip .details').html(
               // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
-              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(country) + '</span> ' +
-              ' for ' + worldMap.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
-              '.<br/>' +
-              '<div class="notes">' + country.notes + '</div>');
+              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(country) 
+              + '</span> ' 
+              + ' for ' + worldMap.connectionLabel +' from ' 
+              + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) 
+              + '.<br/>' 
+              + '<div class="notes">' + country.notes + '</div>');
           } else {
             $('#country-tooltip .details').html( 'Data not available.' );
           }
@@ -1013,7 +1059,8 @@ export function updateCountryTooltip(worldMap, country) {
             		+ CountryDataHelpers.getCountryVisaTitle(worldMap.selectedDestinationCountry) + '</span> ' +
               // CountryDataHelpers.getCountryDetailsByVisaStatus(worldMap.selectedDestinationCountry) +
               ' in ' + worldMap.selectedDestinationCountry.name +
-              ' for ' + worldMap.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
+              ' for ' + worldMap.connectionLabel 
+              +' from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
               '.<br/><div class="notes">' + worldMap.selectedDestinationCountry.notes + '</div>');
           } else {
             $('#country-tooltip .details').html( 'Data not available.' );
@@ -1033,7 +1080,8 @@ export function updateCountryTooltip(worldMap, country) {
               // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
               '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(country) + '</span> ' +
               ' in ' + worldMap.selectedDestinationCountry.name +
-              ' for ' + worldMap.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(country) +
+              ' for ' + worldMap.connectionLabel 
+              +' from ' + CountryDataHelpers.getCountryNameWithArticle(country) +
               '.<br/><div class="notes">' + country.notes + '</div>');
           } else {
             $('#country-tooltip .details').html( 'Data not available.' );
@@ -1063,9 +1111,12 @@ export function hideCountryTooltip() {
 
 export function showCountryHoverInfoVisaFreeDestinations(country) {
   if(country.destinations.length > 0) {
-    $('#country-tooltip .details').html( country.numDestinationsFreeOrOnArrival 
-    		+ ' destination countries nationals from ' + CountryDataHelpers.getCountryNameWithArticle(country) 
+    
+	  $('#country-tooltip .details').html( country.numDestinationsFreeOrOnArrival 
+    		+ ' destination countries nationals from ' 
+    		+ CountryDataHelpers.getCountryNameWithArticle(country) 
     		+ ' can travel to visa-free or with visa on arrival' );
+    
   } else {
     $('#country-tooltip .details').html( 'Data not available.' );
   }
@@ -1083,9 +1134,20 @@ export function showCountryHoverInfoVisaFreeSources(country) {
 
 
 export function showCountryHoverInfoGDP(country) {
-  if(country.userValue > 100) {
-    var value = country.userValue / 1000;
-    $('#country-tooltip .details').html( 'GDP: ' + formatNumber(value, 1) + ' Billion USD' );
+  if(country.userValue > 0) {
+	  
+    var value = country.userValue;
+    $('#country-tooltip .details').html( 
+    		country.preLabel
+			+ " " 
+			+ CountryDataHelpers.getCountryNameWithArticle( country )
+			+ ' : ' 
+			+ value
+			+ ' ' 
+			+ country.postLabel );
+				
+    		//'GDP: ' + formatNumber(value, 1) + ' Billion USD' );
+    
   } else {
     $('#country-tooltip .details').html( 'Data not available' );
   }
@@ -1103,11 +1165,45 @@ export function updateModeStatement(worldMap) {
 
   //emilio	 
   if(worldMap.mode === 'destinations') {
-    setHeadline('Destinations.');
+	  
+	if(worldMap.userData.destinationHeader !== null && 
+	  	worldMap.userData.destinationHeader !== undefined ){
+		
+		setHeadline(worldMap.userData.destinationHeader);
+	    
+	}else{
+		
+		setHeadline('Destinations.');
+		
+	}
+    
   } else if(worldMap.mode === 'sources') {
-    setHeadline('Sources.');
+	  
+	if(worldMap.userData.sourcesHeader !== null && 
+		  	worldMap.userData.sourcesHeader !== undefined ){
+				
+		setHeadline(worldMap.userData.sourcesHeader);
+		    
+	}else{
+				
+	    setHeadline('Sources.');
+			
+	}
+	  
+
   } else if(worldMap.mode === 'userValue') {
-	  setHeadline('Country Data.');
+	  
+	  if(worldMap.userData.valueHeader !== null && 
+			  	worldMap.userData.valueHeader !== undefined ){
+					
+			setHeadline(worldMap.userData.valueHeader);
+			    
+	  }else{
+					
+		  setHeadline('Country Data.');
+				
+	  }
+	  
   }
 	
   if(!$('#travelscope').is( ':visible' )) {
@@ -1147,7 +1243,7 @@ export function updateModeStatement(worldMap) {
 export function createLoadingInfo() {
   $('#country_dropdown').val('Loading ...');
   $('#destination_country_dropdown').val('Loading ...');
-  $('#loading .details').html('Loading Visa requirements ...');
+  $('#loading .details').html('Loading User data ...');
   centerLoadingPanelToScreen();
 };
 

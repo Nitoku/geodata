@@ -51,7 +51,10 @@ function WorldMap() {
   window.worldMap = this;
   window.worldMapUI = UI;
    
-  this.connectionLabel = 'connections'; 	  
+  this.connectionLabel = 'connections';
+  this.connectionFromLabel = 'has connections from';
+  this.connectionToLabel = 'has connections to';
+  
   this.geo;
   this.scene = {};
   this.renderer = {};
@@ -65,7 +68,8 @@ function WorldMap() {
 
   this.countries;
   this.userData;
-
+  this.typeSet;
+  
   this.selectedCountry = null;
   this.selectedDestinationCountry = null;
   this.visaInformationFound = false;
@@ -422,7 +426,7 @@ WorldMap.prototype = {
           if(country.destinations.length > 0) {
             c.set(country.colorByFreeDestinations);
           } else {
-            c.set(Config.colorVisaDataNotAvailable);
+            c.set(Config.colorDataNotAvailable);
           }
 
         } else {
@@ -431,7 +435,7 @@ WorldMap.prototype = {
           if(country.destinations.length > 0) {
             c.set(country.colorByFreeDestinations);
           } else {
-            c.set(Config.colorVisaDataNotAvailable);
+            c.set(Config.colorDataNotAvailable);
           }
 
         }
@@ -463,7 +467,7 @@ WorldMap.prototype = {
 
           // like nothing selected:
           if(country.disputed) {
-            c.set(Config.colorVisaDataNotAvailable);
+            c.set(Config.colorDataNotAvailable);
           } else {
             c.set(country.colorByFreeSources);
           }
@@ -487,7 +491,7 @@ WorldMap.prototype = {
 
           // nothing selected:
           if(country.disputed) {
-            c.set(Config.colorVisaDataNotAvailable);
+            c.set(Config.colorDataNotAvailable);
           } else {
             c.set(country.colorByFreeSources);
           }
@@ -500,7 +504,7 @@ WorldMap.prototype = {
         } else if(country.userValue > 100) {
           c.set(country.colorByGDP);
         } else {
-          c.set(Config.colorVisaDataNotAvailable);
+          c.set(Config.colorDataNotAvailable);
         }
 
       }
@@ -900,6 +904,7 @@ WorldMap.prototype = {
   setSelectedDisputedCountry: function(country) {
     if(!this.introRunning) {
       this.selectedCountry = country;
+      //log(country);
       UI.setHeadline( country.name );
     }
   },
@@ -965,11 +970,14 @@ WorldMap.prototype = {
               UI.setHeadline(
                 // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
                 '<span class="visa-title">' 
-            		  + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
-                ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(this.selectedCountry) +
-                sovereignty +
-                ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
-                sovereigntyDestination +
+            		+ CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) 
+            		+ '</span> ' 
+            		+ ' for ' + this.connectionLabel +' from ' 
+                	+ CountryDataHelpers.getCountryNameWithArticle(this.selectedCountry) 
+                	+ sovereignty 
+                	+ ' to ' 
+                	+ CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) 
+                	+ sovereigntyDestination +
                 '.<br/>' +
                 '<div class="notes">' + this.selectedDestinationCountry.notes +
                 '</div>' );
@@ -1066,9 +1074,10 @@ WorldMap.prototype = {
 
           UI.setHeadline(
             CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
-            sovereignty +
-            ' has '+ worldMap.connectionLabel +' to <b>' + this.selectedCountry.numDestinationsFreeOrOnArrival 
-            			+ ' countries.</b>');
+            sovereignty 
+            +' '
+            + worldMap.connectionToLabel +' <b>' + this.selectedCountry.numDestinationsFreeOrOnArrival 
+            + ' countries.</b>');
           UI.showSelectedLegend();
 
           // this.selectedCountry.populationPercentage + '&nbsp;% of the global population)
@@ -1076,7 +1085,7 @@ WorldMap.prototype = {
         } else {
           this.visaInformationFound = false;
 
-          UI.setHeadline( 'Data not available for ' + this.connectionLabel +' from ' 
+          UI.setHeadline( 'Data not available for ' 
         		  + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) 
         		  + '. <div class="notes">Please select a different country or click/tap the background to clear selection.</div>');
           UI.showSelectedLegend();
@@ -1204,11 +1213,10 @@ WorldMap.prototype = {
           sovereigntyDestination = ' (' + this.selectedDestinationCountry.sovereignt + ')';
         }
 
-        UI.setHeadline(
-          toSentenceStart( 
-        		  CountryDataHelpers.getCountryNameWithArticle(this.selectedDestinationCountry) ) +
-          sovereigntyDestination +
-          ' has ' + worldMap.connectionLabel + ' from <b>' 
+        UI.setHeadline( 
+          CountryDataHelpers.getCountryNameWithArticle(this.selectedDestinationCountry)
+          + ' '
+          + worldMap.connectionFromLabel + ' <b>' 
           + this.selectedDestinationCountry.numSourcesFreeOrOnArrival +
           ' countries.</b>');
         UI.showSelectedLegend();
@@ -1222,22 +1230,29 @@ WorldMap.prototype = {
     } else if(this.mode === 'userValue') {
       html = '';
       if(this.selectedCountry) {
-        if(this.selectedCountry.userValue > 100) {
-          value = this.selectedCountry.userValue / 1000;
-          value = formatNumber(value, 1) + ' Billion USD';
-          html += 'GDP of ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) 
-          				+ ': ' + value + '<br/>';
+        if(this.selectedCountry.userValue > 0) {
+          value = this.selectedCountry.userValue;
+          //value = formatNumber(value);
+    	  //log(this.selectedCountry);
+          html += 	    this.selectedCountry.preLabel
+          				+ " " 
+          				+ CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry )
+          				+ ' : ' 
+          				+ value
+          				+ ' ' 
+          				+ this.selectedCountry.postLabel
+          				+ '<br/>';
         } else {
           html += 'Data for ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) 
-          				+ ' not available<br/>';
+         				+ ' not available<br/>';
         }
       }
       if(this.selectedDestinationCountry) {
-        if(this.selectedDestinationCountry.userValue > 100) {
-          value = this.selectedDestinationCountry.userValue / 1000;
-          value = formatNumber(value, 1) + ' Billion USD';
-          html += 'GDP of ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) 
-          				+ ': ' + value + '<br/>';
+        if(this.selectedDestinationCountry.userValue > 0) {
+          value = this.selectedDestinationCountry.userValue;
+          value = value + ' ' + this.selectedCountry.postLabel;
+          html += CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) 
+          				+ ' : ' + value + '<br/>';
         } else {
           html += 'Data for ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) 
           				+ ' not available<br/>';
@@ -1271,6 +1286,7 @@ WorldMap.prototype = {
     */
 
   }
+  
 }; /* WorldMap end */
 
 
@@ -1300,25 +1316,50 @@ function init() {
   // log( 'JSON Data: ' + dataRequirements.countries['Germany'].code );
   
   worldMap.userData = {
+		  
     		"created": "2018-07-01T05:00:01+02:00",
     		"mode" : "userValue",
     		"type": "userData",
-    		"header" : "Header test",
-    		"sourcesHeader" : "Sources test",
-    		"destinationHeader" : "Destination test",
     		"about" : "About test, all errors are mine...",
-    		"countryValueLabel" : "GDP__",
+
+    		//----- Application header
+    		
+    		"header" : "_Nitoku",
+    		
+    		//----- Headers for the different modes
+    		
+    		"valueHeader" : "_Inmigration data per country.",
+    		"sourcesHeader" : "_Sources test",
+    		"destinationHeader" : "_Destination test",
+    		
+    		//--------------------------------------
+    		
+    		"connectionToLabel" : "_has connections to",
+    		"connectionFromLabel" : "_has connections from",
+    		"preLabel": "_Total inmigration in ",
+			"postLabel": "_foreigners",
+			  
     		"linkTypes"  : [
+    			
     			{"name"  : "type1",
-    			 "color" : "#24292e", // black
+    			 "color" : "#f79109", // orange
     			 "label" : "Enlace molon 1"},
      			{"name"  : "type2",
-        		 "color" : "#faebd7", // orange
-        		 "label" : "Enlace molon 2"}
+        		 "color" : "#f79109", // orange
+        		 "label" : "Enlace molon 2"},
+      			{"name"  : "type3",
+           		 "color" : "#f79109", // orange
+           		 "label" : "Enlace molon 3"},
+       			{"name"  : "type4",
+               	 "color" : "#f79109", // orange
+               	 "label" : "Enlace molon 4"}
+
     		],
+    		
     		"countries": [
 	    		{ "name": "Afghanistan", 
 	    		  "code": "AFG", 
+				  "userValue" : "100000",
 	    		  "destinations": [	
 	    			  
 							{ "d_name": "Algeria",
@@ -1342,31 +1383,121 @@ function init() {
 								"notes": "notes spain | " },
 
 							{ "d_name": "Italy",
-								"linkTypeName": "type5",
 								"linkTitle": "title italy",
 								"notes": "notes italy | " },
 									
 							{ "d_name": "Angola",
-							"linkTypeName": "type6",								
-							"linkTitle": " test angola Visa required",
-							"notes": " notes angola " },
+								"linkTitle": " test angola Visa required",
+								"notes": " notes angola " },
 
 							{ "d_name": "Germany",
-								//"linkTypeName": "type6",								
 								"linkTitle": " test germany Visa required",
 								"notes": " notes germany " }
-
-								],
-							
-				  "userLabel": "mola afghanistan",
-				  "userValue" : "100000"
+								]
 	    		}
 	    	],
 	};
   
+  	if(worldMap.userData.header !== null && 
+  		worldMap.userData.header !== undefined ){
+	    $('.navbar-brand').html(worldMap.userData.header); 
+	}else{
+		$('.navbar-brand').html("Geodata");
+	}
+  
+  	//configure link colors
+  	for (var i in worldMap.userData.linkTypes)
+    {
+
+	 var color = 
+		new THREE.Color(worldMap.userData.linkTypes[i].color);
+
+  	 if(worldMap.userData.linkTypes[i].name === "type1" &&
+  			color !== undefined &&
+  			color !== null 
+  		 ){
+  		 if(color.getHexString() !== "ffffff"){
+  			Config.colorType1 = color; 
+  		 }
+  	 }
+  	 
+  	 if(worldMap.userData.linkTypes[i].name === "type2"&&
+  			color !== undefined &&
+  			color !== null 
+  		 ){
+  		 if(color.getHexString() !== "ffffff"){
+  			Config.colorType2 = color; 
+  		 }
+  	 }
+  	 
+  	 if(worldMap.userData.linkTypes[i].name === "type3"&&
+  			color !== undefined &&
+  			color !== null 
+  		 ){
+  		 if(color.getHexString() !== "ffffff"){
+  			Config.colorType3 = color; 
+  		 }
+  	 }
+  	 
+  	 if(worldMap.userData.linkTypes[i].name === "type4"&&
+  			color !== undefined &&
+  			color !== null 
+  		 ){
+  		 if(color.getHexString() !== "ffffff"){
+  			Config.colorType4 = color; 
+  		 }
+  	 }
+  	 
+  	 if(worldMap.userData.linkTypes[i].name === "type5"&&
+  			color !== undefined &&
+  			color !== null 
+  		 ){
+  		 if(color.getHexString() !== "ffffff"){
+  			Config.colorType5 = color; 
+  		 }
+  	 }
+  	 
+  	 if(worldMap.userData.linkTypes[i].name === "type6"&&
+  			color !== undefined &&
+  			color !== null 
+  		 ){
+  		 if(color.getHexString() !== "ffffff"){
+  			Config.colorType6 = color; 
+  		 }
+  	 }
+  	 
+    }
+  	
     worldMap.initD3();
     worldMap.initThree();
+    
+    if(worldMap.userData.connectionFromLabel !== null && 
+    		worldMap.userData.connectionFromLabel !== undefined ){
+    	worldMap.connectionFromLabel = worldMap.userData.connectionFromLabel;
+    }
 
+    if(worldMap.userData.connectionToLabel !== null && 
+    		worldMap.userData.connectionToLabel !== undefined ){
+    	worldMap.connectionToLabel = worldMap.userData.connectionToLabel;
+    	
+    }
+
+    if(worldMap.userData.preLabel === null || 
+    		worldMap.userData.preLabel === undefined ){
+        worldMap.userData.preLabel = '';
+    }
+    
+    if(worldMap.userData.postLabel === null || 
+    		worldMap.userData.postLabel === undefined ){
+    	worldMap.userData.postLabel = ''; 
+    }
+
+    if(worldMap.userData.valueHeader === null || 
+    		worldMap.userData.valueHeader === undefined ){
+    	worldMap.userData.valueHeader = 'Country data'; 
+    }
+
+    
     if(Config.sphereEnabled) {
       Geometry.createSphere(worldMap);
     }
