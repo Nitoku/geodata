@@ -51,7 +51,7 @@ function WorldMap() {
   window.worldMap = this;
   window.worldMapUI = UI;
    
-  this.connectionLabel = 'connections';
+  this.connectionLabel = 'links';
   this.connectionFromLabel = 'has connections from';
   this.connectionToLabel = 'has connections to';
   
@@ -107,6 +107,224 @@ function WorldMap() {
 }
 
 WorldMap.prototype = {
+
+	initWorldMap: function() {
+			  
+			  	if(worldMap.userData.header !== null && 
+			  		worldMap.userData.header !== undefined ){
+				    $('.navbar-brand').html(worldMap.userData.header); 
+				}else{
+					$('.navbar-brand').html("Geodata");
+				}
+
+			  	if(worldMap.userData.about !== null && 
+			  	  		worldMap.userData.about !== undefined ){
+			  	    $('#about-content').html(worldMap.userData.about); 
+			  	}else{
+			  		$('#about-content').html("Thank you for using this block, you can find more information" +
+			  				" about how you can use it here : http://www.nitoku.com/@nitoku.public/geodata");
+				}
+
+			  	//configure link colors
+			  	for (var i in worldMap.userData.linkTypes)
+			    {
+
+				 var color = 
+					new THREE.Color(worldMap.userData.linkTypes[i].color);
+
+			  	 if(worldMap.userData.linkTypes[i].name === "type1" &&
+			  			color !== undefined &&
+			  			color !== null 
+			  		 ){
+			  		 if(color.getHexString() !== "ffffff"){
+			  			Config.colorType1 = color; 
+			  		 }
+			  	 }
+			  	 
+			  	 if(worldMap.userData.linkTypes[i].name === "type2"&&
+			  			color !== undefined &&
+			  			color !== null 
+			  		 ){
+			  		 if(color.getHexString() !== "ffffff"){
+			  			Config.colorType2 = color; 
+			  		 }
+			  	 }
+			  	 
+			  	 if(worldMap.userData.linkTypes[i].name === "type3"&&
+			  			color !== undefined &&
+			  			color !== null 
+			  		 ){
+			  		 if(color.getHexString() !== "ffffff"){
+			  			Config.colorType3 = color; 
+			  		 }
+			  	 }
+			  	 
+			  	 if(worldMap.userData.linkTypes[i].name === "type4"&&
+			  			color !== undefined &&
+			  			color !== null 
+			  		 ){
+			  		 if(color.getHexString() !== "ffffff"){
+			  			Config.colorType4 = color; 
+			  		 }
+			  	 }
+			  	 
+			  	 if(worldMap.userData.linkTypes[i].name === "type5"&&
+			  			color !== undefined &&
+			  			color !== null 
+			  		 ){
+			  		 if(color.getHexString() !== "ffffff"){
+			  			Config.colorType5 = color; 
+			  		 }
+			  	 }
+			  	 
+			  	 if(worldMap.userData.linkTypes[i].name === "type6"&&
+			  			color !== undefined &&
+			  			color !== null 
+			  		 ){
+			  		 if(color.getHexString() !== "ffffff"){
+			  			Config.colorType6 = color; 
+			  		 }
+			  	 }
+			  	 
+			    }
+			  	
+			    worldMap.initD3();
+			    worldMap.initThree();
+			    
+			    if(worldMap.userData.connectionFromLabel !== null && 
+			    		worldMap.userData.connectionFromLabel !== undefined ){
+			    	worldMap.connectionFromLabel = worldMap.userData.connectionFromLabel;
+			    }
+
+			    if(worldMap.userData.connectionToLabel !== null && 
+			    		worldMap.userData.connectionToLabel !== undefined ){
+			    	worldMap.connectionToLabel = worldMap.userData.connectionToLabel;
+			    	
+			    }
+
+			    if(worldMap.userData.preLabel === null || 
+			    		worldMap.userData.preLabel === undefined ){
+			        worldMap.userData.preLabel = '';
+			    }
+			    
+			    if(worldMap.userData.postLabel === null || 
+			    		worldMap.userData.postLabel === undefined ){
+			    	worldMap.userData.postLabel = ''; 
+			    }
+
+			    if(worldMap.userData.valueHeader === null || 
+			    		worldMap.userData.valueHeader === undefined ){
+			    	worldMap.userData.valueHeader = 'Country data'; 
+			    }
+
+			    
+			    
+			    if(Config.sphereEnabled) {
+			      Geometry.createSphere(worldMap);
+			    }
+
+			    // log('Loading world map ...');
+			    UI.updateLoadingInfo('Loading world map ...');
+
+			    $.when( $.getJSON(Config.mapDataFile) ).then(function(dataCountries) {
+			      //log('index.js [init()] World map loaded.');
+			      worldMap.dataCountries = dataCountries;
+
+			      /*
+			      // check for duplicate sovereignties:
+			      var count = 0;
+			      var features = dataCountries.features;
+			      worldMap.dataCountries.features = [];
+			      for(var i = 0 ; i < features.length; i++) {
+			        var feature2 = features[i];
+
+			        var found = false;
+			        for(var j = 0 ; j < worldMap.dataCountries.features.length ; j++) {
+			          var feature = worldMap.dataCountries.features[j];
+			          if( feature.sovereignt === feature2.sovereignt ) {
+			            found = true;
+			            break;
+			          }
+			        }
+			        if(!found) {
+			          worldMap.dataCountries.features.push(feature2);
+			          // log('Adding country: ' + feature2.name);
+			        } else {
+			          log('Duplicate country: ' + feature2.name + ', sovereignty: ' + feature2.sovereignt);
+			          count++;
+			        }
+			      }
+			      log(count);
+			      */
+
+			      if(Config.mergeDataFromMapDataFile2) {
+			        $.when( $.getJSON(Config.mapDataFile2) ).then(function(dataCountries2) {
+			          // console.log( dataCountries2.features.length );
+
+			          // merge countries from second higher-res map into first instead of loading full highres map:
+			          for(var i = 0; i < dataCountries2.features.length; i++) {
+			            var feature2 = dataCountries2.features[i];
+
+			            var found = false;
+			            for(var j = 0; j < worldMap.dataCountries.features.length; j++) {
+			              var feature = worldMap.dataCountries.features[j];
+			              if(feature.properties.NAME === feature2.properties.NAME) {
+			                found = true;
+			                break;
+			              }
+			            }
+
+			            if(!found) {
+			              worldMap.dataCountries.features.push(feature2);
+			              log('Adding country: ' + feature2.properties.NAME + ', type: ' + feature2.properties.TYPE);
+			            }
+			          }
+
+			          if(Config.mergeDataFromDisputedAreasFile) {
+			            $.when( $.getJSON(Config.disputedAreasFile) ).then(function(disputedAreas) {
+			              // merge disputed areas:
+			              for(var i = 0; i < disputedAreas.features.length; i++) {
+			                var disputedArea = disputedAreas.features[i];
+			                disputedArea.disputed = true;
+			                // if(disputedArea.properties.TYPE !== 'Disputed') 
+			                //		console.log(disputedArea.properties.TYPE, disputedArea.properties.NAME, disputedArea.properties);
+			                worldMap.dataCountries.features.push(disputedArea);
+			              }
+
+			              console.log(disputedAreas.features.length + ' disputed areas loaded');
+
+			              completeInit();
+			            });
+			          } else {
+			            completeInit();
+
+			          }
+
+			        });
+
+			      } else {
+			        completeInit();
+			      }
+
+			 //   });
+			  });
+
+			  function animate() {
+			    requestAnimationFrame(animate);
+
+			    if(worldMap !== undefined) worldMap.geometryNeedsUpdate = false;
+
+			    if(stats !== undefined) stats.update();
+
+			    TWEEN.update();
+
+			    if(worldMap !== undefined){ worldMap.animate();}
+			    
+			    
+			  }
+			  animate();
+
+  },
 
   initD3: function() {
 
@@ -970,15 +1188,9 @@ WorldMap.prototype = {
               UI.setHeadline(
                 // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
                 '<span class="visa-title">' 
-            		+ CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) 
+            		+ CountryDataHelpers.getCountryLinkTitleLabel(this.selectedDestinationCountry) 
             		+ '</span> ' 
-            		+ ' for ' + this.connectionLabel +' from ' 
-                	+ CountryDataHelpers.getCountryNameWithArticle(this.selectedCountry) 
-                	+ sovereignty 
-                	+ ' to ' 
-                	+ CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) 
-                	+ sovereigntyDestination +
-                '.<br/>' +
+            		+ '.<br/>' +
                 '<div class="notes">' + this.selectedDestinationCountry.notes +
                 '</div>' );
 
@@ -996,7 +1208,7 @@ WorldMap.prototype = {
 //
 //            UI.setHeadline(
 //              // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
-//              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
+//              '<span class="visa-title">' + CountryDataHelpers.getCountryLinkTitleLabel(this.selectedDestinationCountry) + '</span> ' +
 //              ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
 //              sovereignty +
 //              ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
@@ -1117,6 +1329,7 @@ WorldMap.prototype = {
         destinations = this.selectedCountry.destinations;
         if( destinations.length > 0 ) {
           for(d = 0; d < destinations.length; d++) {
+        	  
             if( (CountryDataHelpers.matchDestinationToCountryName(destinations[d].d_name, 
             		this.selectedDestinationCountry.name) || 
             		CountryDataHelpers.matchDestinationToCountryName(
@@ -1131,13 +1344,9 @@ WorldMap.prototype = {
               UI.setHeadline(
                 // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
                 '<span class="visa-title">' 
-            		  + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
-                ' for ' + this.connectionLabel 
-                	+' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
-                sovereignty +
-                ' to ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedDestinationCountry ) +
-                sovereigntyDestination +
-                '.<br/><div class="notes">' + this.selectedDestinationCountry.notes + '</div>' );
+            		  + CountryDataHelpers.getCountryLinkTitleLabel(this.selectedDestinationCountry) 
+            	+ '</span> ' +
+            	'.<br/><div class="notes">' + this.selectedDestinationCountry.notes + '</div>' );
 
               break;
             }
@@ -1149,7 +1358,7 @@ WorldMap.prototype = {
 //            this.selectedDestinationCountry.notes = 'National of same sovereignty (exceptions may exist)';
 //            this.visaInformationFound = true;
 //            UI.setHeadline(
-//              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(this.selectedDestinationCountry) + '</span> ' +
+//              '<span class="visa-title">' + CountryDataHelpers.getCountryLinkTitleLabel(this.selectedDestinationCountry) + '</span> ' +
 //              // CountryDataHelpers.getCountryDetailsByVisaStatus(this.selectedDestinationCountry) +
 //              ' for ' + this.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle( this.selectedCountry ) +
 //              sovereignty +
@@ -1291,7 +1500,7 @@ WorldMap.prototype = {
 
 
 function init() {
-
+	
   if(!Config.logTerminalVisible) {
     LogTerminal.hide();
   }
@@ -1312,306 +1521,7 @@ function init() {
 
   worldMap = new WorldMap();
   
-  //log('Visa requirements loaded for ' + dataRequirements.countries.length + ' sovereignties');
-  // log( 'JSON Data: ' + dataRequirements.countries['Germany'].code );
-  
-  worldMap.userData = {
-		  
-    		"mode" : "userValue",
-    		"about" : "About test, all errors are mine...",
-
-    		//----- Application header
-    		
-    		"header" : "_Nitoku",
-    		
-    		//----- Headers for the different modes
-    		
-    		"valueHeader" : "_Inmigration data per country.",
-    		"sourcesHeader" : "_Sources test",
-    		"destinationHeader" : "_Destination test",
-    		
-    		//--------------------------------------
-    		
-    		"connectionToLabel" : " has migrants going to",
-    		"connectionFromLabel" : "has migrants from",
-    		"preLabel": "_Total inmigration in ",
-			"postLabel": "_foreigners",
-			  
-    		"linkTypes"  : [
-    			
-    			{"name"  : "type1",
-    			 "color" : "#f79109", // orange
-    			 "label" : "Enlace molon 1"},
-     			{"name"  : "type2",
-        		 "color" : "#f79109", // orange
-        		 "label" : "Enlace molon 2"},
-      			{"name"  : "type3",
-           		 "color" : "#f79109", // orange
-           		 "label" : "Enlace molon 3"},
-       			{"name"  : "type4",
-               	 "color" : "#f79109", // orange
-               	 "label" : "Enlace molon 4"}
-
-    		],
-    		
-    		"countries": [
-	    		{ "name": "Afghanistan", 
-	    		  "code": "AFG", 
-				  "userValue" : "100000",
-	    		  "destinations": [	
-	    			  
-							{ "d_name": "Algeria",
-							"linkTypeName": "type1",
-							"linkTitle": "test algeria",
-							"notes": "| notes algeria " },
-							
-							{ "d_name": "Andorra",
-							"linkTypeName": "type2",
-							"linkTitle": "title andorra",
-							"notes": "notes andorra | " },	
-							
-							{ "d_name": "France",
-								"linkTypeName": "type3",
-								"linkTitle": "title france",
-								"notes": "notes france | " },
-
-							{ "d_name": "Spain",
-								"linkTypeName": "type4",
-								"linkTitle": "title spain",
-								"notes": "notes spain | " },
-
-							{ "d_name": "Italy",
-								"linkTitle": "title italy",
-								"notes": "notes italy | " },
-									
-							{ "d_name": "Angola",
-								"linkTitle": " test angola",
-								"notes": " notes angola " },
-
-							{ "d_name": "Germany",
-								"linkTitle": " test germany",
-								"notes": " notes germany " }
-								]
-	    		}
-	    	],
-	};
-  
-  	if(worldMap.userData.header !== null && 
-  		worldMap.userData.header !== undefined ){
-	    $('.navbar-brand').html(worldMap.userData.header); 
-	}else{
-		$('.navbar-brand').html("Geodata");
-	}
-
-  	if(worldMap.userData.about !== null && 
-  	  		worldMap.userData.about !== undefined ){
-  	    $('#about-content').html(worldMap.userData.about); 
-  	}else{
-  		$('#about-content').html("Thank you for using this block, you can find more information" +
-  				" about how you can use it here : http://www.nitoku.com/@nitoku.public/geodata");
-	}
-
-  	//configure link colors
-  	for (var i in worldMap.userData.linkTypes)
-    {
-
-	 var color = 
-		new THREE.Color(worldMap.userData.linkTypes[i].color);
-
-  	 if(worldMap.userData.linkTypes[i].name === "type1" &&
-  			color !== undefined &&
-  			color !== null 
-  		 ){
-  		 if(color.getHexString() !== "ffffff"){
-  			Config.colorType1 = color; 
-  		 }
-  	 }
-  	 
-  	 if(worldMap.userData.linkTypes[i].name === "type2"&&
-  			color !== undefined &&
-  			color !== null 
-  		 ){
-  		 if(color.getHexString() !== "ffffff"){
-  			Config.colorType2 = color; 
-  		 }
-  	 }
-  	 
-  	 if(worldMap.userData.linkTypes[i].name === "type3"&&
-  			color !== undefined &&
-  			color !== null 
-  		 ){
-  		 if(color.getHexString() !== "ffffff"){
-  			Config.colorType3 = color; 
-  		 }
-  	 }
-  	 
-  	 if(worldMap.userData.linkTypes[i].name === "type4"&&
-  			color !== undefined &&
-  			color !== null 
-  		 ){
-  		 if(color.getHexString() !== "ffffff"){
-  			Config.colorType4 = color; 
-  		 }
-  	 }
-  	 
-  	 if(worldMap.userData.linkTypes[i].name === "type5"&&
-  			color !== undefined &&
-  			color !== null 
-  		 ){
-  		 if(color.getHexString() !== "ffffff"){
-  			Config.colorType5 = color; 
-  		 }
-  	 }
-  	 
-  	 if(worldMap.userData.linkTypes[i].name === "type6"&&
-  			color !== undefined &&
-  			color !== null 
-  		 ){
-  		 if(color.getHexString() !== "ffffff"){
-  			Config.colorType6 = color; 
-  		 }
-  	 }
-  	 
-    }
-  	
-    worldMap.initD3();
-    worldMap.initThree();
-    
-    if(worldMap.userData.connectionFromLabel !== null && 
-    		worldMap.userData.connectionFromLabel !== undefined ){
-    	worldMap.connectionFromLabel = worldMap.userData.connectionFromLabel;
-    }
-
-    if(worldMap.userData.connectionToLabel !== null && 
-    		worldMap.userData.connectionToLabel !== undefined ){
-    	worldMap.connectionToLabel = worldMap.userData.connectionToLabel;
-    	
-    }
-
-    if(worldMap.userData.preLabel === null || 
-    		worldMap.userData.preLabel === undefined ){
-        worldMap.userData.preLabel = '';
-    }
-    
-    if(worldMap.userData.postLabel === null || 
-    		worldMap.userData.postLabel === undefined ){
-    	worldMap.userData.postLabel = ''; 
-    }
-
-    if(worldMap.userData.valueHeader === null || 
-    		worldMap.userData.valueHeader === undefined ){
-    	worldMap.userData.valueHeader = 'Country data'; 
-    }
-
-    
-    
-    if(Config.sphereEnabled) {
-      Geometry.createSphere(worldMap);
-    }
-
-    // log('Loading world map ...');
-    UI.updateLoadingInfo('Loading world map ...');
-
-    $.when( $.getJSON(Config.mapDataFile) ).then(function(dataCountries) {
-      //log('index.js [init()] World map loaded.');
-      worldMap.dataCountries = dataCountries;
-
-      /*
-      // check for duplicate sovereignties:
-      var count = 0;
-      var features = dataCountries.features;
-      worldMap.dataCountries.features = [];
-      for(var i = 0 ; i < features.length; i++) {
-        var feature2 = features[i];
-
-        var found = false;
-        for(var j = 0 ; j < worldMap.dataCountries.features.length ; j++) {
-          var feature = worldMap.dataCountries.features[j];
-          if( feature.sovereignt === feature2.sovereignt ) {
-            found = true;
-            break;
-          }
-        }
-        if(!found) {
-          worldMap.dataCountries.features.push(feature2);
-          // log('Adding country: ' + feature2.name);
-        } else {
-          log('Duplicate country: ' + feature2.name + ', sovereignty: ' + feature2.sovereignt);
-          count++;
-        }
-      }
-      log(count);
-      */
-
-      if(Config.mergeDataFromMapDataFile2) {
-        $.when( $.getJSON(Config.mapDataFile2) ).then(function(dataCountries2) {
-          // console.log( dataCountries2.features.length );
-
-          // merge countries from second higher-res map into first instead of loading full highres map:
-          for(var i = 0; i < dataCountries2.features.length; i++) {
-            var feature2 = dataCountries2.features[i];
-
-            var found = false;
-            for(var j = 0; j < worldMap.dataCountries.features.length; j++) {
-              var feature = worldMap.dataCountries.features[j];
-              if(feature.properties.NAME === feature2.properties.NAME) {
-                found = true;
-                break;
-              }
-            }
-
-            if(!found) {
-              worldMap.dataCountries.features.push(feature2);
-              log('Adding country: ' + feature2.properties.NAME + ', type: ' + feature2.properties.TYPE);
-            }
-          }
-
-          if(Config.mergeDataFromDisputedAreasFile) {
-            $.when( $.getJSON(Config.disputedAreasFile) ).then(function(disputedAreas) {
-              // merge disputed areas:
-              for(var i = 0; i < disputedAreas.features.length; i++) {
-                var disputedArea = disputedAreas.features[i];
-                disputedArea.disputed = true;
-                // if(disputedArea.properties.TYPE !== 'Disputed') 
-                //		console.log(disputedArea.properties.TYPE, disputedArea.properties.NAME, disputedArea.properties);
-                worldMap.dataCountries.features.push(disputedArea);
-              }
-
-              console.log(disputedAreas.features.length + ' disputed areas loaded');
-
-              completeInit();
-            });
-          } else {
-            completeInit();
-
-          }
-
-        });
-
-      } else {
-        completeInit();
-      }
-
- //   });
-  });
-
-  function animate() {
-    requestAnimationFrame(animate);
-
-    if(worldMap !== undefined) worldMap.geometryNeedsUpdate = false;
-
-    if(stats !== undefined) stats.update();
-
-    TWEEN.update();
-
-    if(worldMap !== undefined){ worldMap.animate();}
-    
-    
-  }
-  animate();
-
 } /* init() end */
-
 
 function completeInit() {
   if(Config.saveMapData) {

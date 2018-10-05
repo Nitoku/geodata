@@ -1028,16 +1028,15 @@ export function updateCountryTooltip(worldMap, country) {
     if(worldMap.mode === 'destinations') {
       if(worldMap.selectedCountry && worldMap.selectedDestinationCountry) {
         if(country === worldMap.selectedCountry) {
-          showCountryHoverInfoVisaFreeDestinations(country);
+        	
+          showCountryHoverInfoDestinations(country);
 
         } else if(country === worldMap.selectedDestinationCountry) {
           if(worldMap.visaInformationFound) {
             $('#country-tooltip .details').html(
               // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
-              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(country) 
+              '<span class="visa-title">' + CountryDataHelpers.getCountryLinkTitleLabel(country) 
               + '</span> ' 
-              + ' for ' + worldMap.connectionLabel +' from ' 
-              + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) 
               + '.<br/>' 
               + '<div class="notes">' + country.notes + '</div>');
           } else {
@@ -1047,7 +1046,7 @@ export function updateCountryTooltip(worldMap, country) {
 
       } else if(worldMap.selectedCountry && !worldMap.selectedDestinationCountry) {
         if(country === worldMap.selectedCountry) {
-          showCountryHoverInfoVisaFreeDestinations(country);
+          showCountryHoverInfoDestinations(country);
 
         } else {
           if(worldMap.selectedCountry.disputed) {
@@ -1057,10 +1056,10 @@ export function updateCountryTooltip(worldMap, country) {
             if(worldMap.visaInformationFound) {
               $('#country-tooltip .details').html(
                 // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
-                '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(country) + '</span> ' +
-                ' for ' + worldMap.connectionLabel +' from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
-                '.<br/>' +
-                '<div class="notes">' + country.notes + '</div>');
+                '<span class="visa-title">' + CountryDataHelpers.getCountryLinkTitleLabel(country) 
+                + '</span> ' 
+                + '.<br/>' 
+                + '<div class="notes">' + country.notes + '</div>');
             } else {
               $('#country-tooltip .details').html( 'Data not available.' );
             }
@@ -1068,49 +1067,44 @@ export function updateCountryTooltip(worldMap, country) {
         }
 
       } else if(!worldMap.selectedCountry && worldMap.selectedDestinationCountry) {
-        showCountryHoverInfoVisaFreeDestinations(country);
+        showCountryHoverInfoDestinations(country);
 
       } else {
         // nothing selected:
-        showCountryHoverInfoVisaFreeDestinations(country);
+        showCountryHoverInfoDestinations(country);
       }
 
     } else if(worldMap.mode === 'sources') {
       if(worldMap.selectedCountry && worldMap.selectedDestinationCountry) {
         if(country === worldMap.selectedDestinationCountry) {
-          showCountryHoverInfoVisaFreeSources(country);
+          showCountryHoverInfoSources(country);
 
         } else if(country === worldMap.selectedCountry) {
           if(worldMap.visaInformationFound) {
             $('#country-tooltip .details').html(
               '<span class="visa-title">' 
-            		+ CountryDataHelpers.getCountryVisaTitle(worldMap.selectedDestinationCountry) + '</span> ' +
-              // CountryDataHelpers.getCountryDetailsByVisaStatus(worldMap.selectedDestinationCountry) +
-              ' in ' + worldMap.selectedDestinationCountry.name +
-              ' for ' + worldMap.connectionLabel 
-              +' from ' + CountryDataHelpers.getCountryNameWithArticle(worldMap.selectedCountry) +
-              '.<br/><div class="notes">' + worldMap.selectedDestinationCountry.notes + '</div>');
+            		+ CountryDataHelpers.getCountryLinkTitleLabel(worldMap.selectedDestinationCountry) 
+            		+ '</span> ' +
+              '<br/><div class="notes">' + worldMap.selectedDestinationCountry.notes + '</div>');
           } else {
             $('#country-tooltip .details').html( 'Data not available.' );
           }
         }
 
       } else if(worldMap.selectedCountry && !worldMap.selectedDestinationCountry) {
-        showCountryHoverInfoVisaFreeSources(country);
+        showCountryHoverInfoSources(country);
 
       } else if(!worldMap.selectedCountry && worldMap.selectedDestinationCountry) {
         if(country === worldMap.selectedDestinationCountry) {
-          showCountryHoverInfoVisaFreeSources(country);
+          showCountryHoverInfoSources(country);
 
         } else {
           if(worldMap.visaInformationFound) {
             $('#country-tooltip .details').html(
               // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
-              '<span class="visa-title">' + CountryDataHelpers.getCountryVisaTitle(country) + '</span> ' +
-              ' in ' + worldMap.selectedDestinationCountry.name +
-              ' for ' + worldMap.connectionLabel 
-              +' from ' + CountryDataHelpers.getCountryNameWithArticle(country) +
-              '.<br/><div class="notes">' + country.notes + '</div>');
+              '<span class="visa-title">' + CountryDataHelpers.getCountryLinkTitleLabel(country) 
+              + '</span> ' 
+              + '<br/><div class="notes">' + country.notes + '</div>');
           } else {
             $('#country-tooltip .details').html( 'Data not available.' );
           }
@@ -1118,7 +1112,7 @@ export function updateCountryTooltip(worldMap, country) {
 
       } else {
         // nothing selected:
-        showCountryHoverInfoVisaFreeSources(country);
+        showCountryHoverInfoSources(country);
       }
 
     } else if(worldMap.mode === 'userValue') {
@@ -1137,13 +1131,13 @@ export function hideCountryTooltip() {
 };
 
 
-export function showCountryHoverInfoVisaFreeDestinations(country) {
+export function showCountryHoverInfoDestinations(country) {
   if(country.destinations.length > 0) {
     
-	  $('#country-tooltip .details').html( country.numDestinationsFreeOrOnArrival 
-    		+ ' destination countries nationals from ' 
-    		+ CountryDataHelpers.getCountryNameWithArticle(country) 
-    		+ ' can travel to visa-free or with visa on arrival' );
+	  $('#country-tooltip .details').html( 
+			  country.numDestinationsFreeOrOnArrival 
+    		+ ' destination countries from ' 
+    		+ CountryDataHelpers.getCountryNameWithArticle(country));
     
   } else {
     $('#country-tooltip .details').html( 'Data not available.' );
@@ -1152,8 +1146,9 @@ export function showCountryHoverInfoVisaFreeDestinations(country) {
 };
 
 
-export function showCountryHoverInfoVisaFreeSources(country) {
-  $('#country-tooltip .details').html( country.name  + ' has ' 
+export function showCountryHoverInfoSources(country) {
+  $('#country-tooltip .details').html( 
+		  country.name  + ' has ' 
 		  + worldMap.connectionLabel 
 		  + ' from ' + country.numSourcesFreeOrOnArrival 
 		  + ' countries.' );

@@ -17,7 +17,7 @@ const config = {
 
   //mapDataFile: cdnURL + 'data/4.1.0/country_data.json?v=' + mapVersion,
 
-  visaRequirementsFile: cdnURL + VISA_REQUIREMENTS_URL,
+  //visaRequirementsFile: cdnURL + VISA_REQUIREMENTS_URL,
 
   mergeDataFromMapDataFile2: false,
   mergeDataFromDisputedAreasFile: false,

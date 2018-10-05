@@ -258,7 +258,7 @@ export function getCountryColorByUserValue(country, maxValue) {
 //};
 
 
-export function getCountryVisaTitle(country) {
+export function getCountryLinkTitleLabel(country) {
   //emilio 
   //if we don't have data provide no data available	
   if(country.linkTitle === '') {
