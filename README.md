@@ -1,18 +1,13 @@
-# Travelscope
-Interactive worldmap of visa-free travel, live demo at https://www.markuslerner.com/travelscope/
-
+# Geodata
+Interactive worldmap building block, live demo at https://www.nitoku.com/@nitoku.public/geodata
 
 ## About
 
-A visual exploration of the travel freedom attached to passports using [three.js](https://github.com/mrdoob/three.js) and [d3](https://github.com/d3/d3).
+This project is a fork of the awesome Travelscope project https://www.markuslerner.com/travelscope/ All credit should go to Markus Lerner, all bugs are mine. Changes has been made to the original codebase to enable third party users to configure the application.
 
-The weight and the travel freedom attached to a passport vary drastically across nationalities. International visa-regulations are very complex and often non-transparent. They reflect the economical and geopolitical situations as well as the relationships of countries.
+You could find the original source here https://github.com/markuslerner
 
-This project aims to cast some light on these structures. The default <i>Visa-free destinations</i> mode shows a <a href="https://en.wikipedia.org/wiki/Choropleth_map" target=“_blank”>choropleth map</a>, which is shaded based on the number of destination countries an individual of a certain nationality can travel to without a visa or with visa on arrival.
-
-The visa requirements are pulled from <a href="http://en.wikipedia.org/wiki/Category:Visa_requirements_by_nationality" target="_new">Wikipedia</a> in regular intervals and matched to the countries/territories via the sovereignty of the respective country/territory.
-
-This project uses the following libaries/technologies:
+This project uses the following libraries/technologies:
 
 * [bootstrap](http://getbootstrap.com/) Bootstrap 3: HTML, CSS, and JS framework
 * [three.js](https://github.com/mrdoob/three.js) lightweight JavaScript 3D library using WebGL
@@ -25,30 +20,6 @@ This project uses the following libaries/technologies:
 * [watchify](https://github.com/substack/watchify) for watching browserify builds
 * [Babel](http://babeljs.io) for ES6 and ES7 magic
 * [ESLint](http://eslint.org) to maintain a consistent code style
-
-
-## Installation
-
-### Install from source
-
-First, clone or download:
-
-```bash
-$ git clone https://github.com/markuslerner/travelscope.git
-```
-or
-
-```bash
-$ wget -O travelscope.zip https://github.com/markuslerner/travelscope/archive/master.zip
-$ unzip travelscope.zip
-```
-
-Optionally rename to your project name and change into the directory:
-
-```bash
-$ mv travelscope <my-project-name>
-$ cd <my-project-name>
-```
 
 ### Install dependencies
 
@@ -117,4 +88,3 @@ $ gulp build
 ```
 
 
-– Markus Lerner, [markuslerner.com](http://www.markuslerner.com)

@@ -181,11 +181,15 @@ function bundleJS(bundler) {
 
 // Copy all static assets (development and production)
 gulp.task('copy', function() {
+	
   gulp.src(options.src + '/assets/fonts/**')
     .pipe(gulp.dest(options.dest + '/assets/fonts'));
 
   gulp.src(options.src + '/assets/img/**')
     .pipe(gulp.dest(options.dest + '/assets/img'));
+
+  gulp.src(options.src + '/assets/data/**')
+  	.pipe(gulp.dest(options.dest + '/assets/data'));
 
   if(options.dev) {
     gulp.src(options.src + '/*.html')
