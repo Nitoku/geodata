@@ -36,6 +36,7 @@ export function init(worldMap) {
 
   closeLoadingInfo();
  
+  initModeSelector(worldMap); 
   
 };
 
@@ -44,6 +45,32 @@ export function completeInit() {
   uiReady = true;
 };
 
+export function initModeSelector(worldMap) {
+	
+	console.info("mode on UI.init: " + worldMap.mode);
+	
+	if(worldMap.mode === 'userValue'){
+		
+		//disable source///destine selectors
+		$('.country_dropdown_container').css('display','none');
+		$('#arrow_right').css('display','none');
+		$('#map_mode').css('display','none');
+		
+	}
+
+	if(worldMap.displayCountrySelectors === false){
+		
+		//disable source///destine selectors
+		$('.country_dropdown_container').css('display','none');
+		$('#arrow_right').css('display','none');
+		
+	}
+	
+	if(worldMap.mode === 'sources'){
+		$('.dropdown-label').html('Sources');
+	}
+
+};
 
 export function createLegend(worldMap) {
   
@@ -424,7 +451,7 @@ function sortCountryListByName() {
 
 function sortCountryListByFreeDestinations() {
   
-  log("sort by destination");
+  //log("sort by destination");
   var count = 0;
   
   var newSorting = 'destinations';
@@ -662,6 +689,7 @@ function repositionCountryList(li) {
 
 
 export function initViewSwitch(worldMap) {
+	
   $('#view_switch_flat').click(function(event) {
     $('#view_switch_flat').addClass('active');
     $('#view_switch_spherical').removeClass('active');
@@ -727,6 +755,7 @@ export function initViewSwitch(worldMap) {
       .easing(TWEEN.Easing.Cubic.Out)
       .start();
   });
+  
 };
 
 

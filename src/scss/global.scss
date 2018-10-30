@@ -81,6 +81,9 @@ b {
 .navbar-default {
 	background-color: #e6f5ef;
 	border-color: #e6f5ef;
+	width: calc(100% - 40px);
+	margin-right:auto;
+	margin-left:auto;
 }
 .navbar-default .navbar-brand {
 	color: #676a6c;
@@ -185,6 +188,7 @@ b {
 	top: 0px;
 	left: 0px;
 }
+
 
 #top-overlay {
 	display: block;
@@ -387,6 +391,7 @@ b {
 }
 
 .navbar-default .dropdown-toggle {
+
   // border: 1px solid #aaa;
   border: 1px solid transparent !important;
   padding: 0.5em 0.5em 0.5em 0.7em;
@@ -415,6 +420,8 @@ b {
     color: #ddd;
     transition: all .2s ease-in-out;
   }
+  
+  
 
 }
 
@@ -467,7 +474,7 @@ b {
 #travelscope {
 	position: fixed;
 	top: 70px;
-	left: 30px;
+	left: 50px;
 	margin: 0;
 	font-size: 24px; /* 15px */
 	font-weight: 400;
@@ -477,7 +484,8 @@ b {
 	max-width: 650px;
 	-webkit-font-smoothing: antialiased;
 	display: none;
-
+	color:#5a8c68;
+	
   .visa-title {
     font-weight: bold;
   }
@@ -506,7 +514,7 @@ b {
 #button_country_list {
 	position: fixed;
 	top: 75px;
-	right: 30px;
+	right: 50px;
 	z-index: 100;
 	width: 212px;
 	text-align: left;
@@ -567,7 +575,7 @@ b {
     position: absolute;
     top: 0;
     left: 0;
-    color: #676a6c;
+    color: #5a8c68;
     cursor: pointer;
     pointer-events: auto;
   }
@@ -665,7 +673,7 @@ b {
 .legend {
 	position: fixed;
 	bottom: 55px;
-	left: 30px;
+	left: 50px;
 	font-size: 10px;
 	letter-spacing: 0.03em;
 	font-weight: 400;
@@ -966,7 +974,7 @@ b {
 #view_switch {
 	position: fixed;
 	bottom: 35px;
-	right: 30px;
+	right: 50px;
 	display: none;
 
   .icon-worldmap-flat {

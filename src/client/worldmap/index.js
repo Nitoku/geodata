@@ -86,7 +86,8 @@ function WorldMap() {
   //default mode is set here
   this.mode = 'userValue';
   this.viewMode = '2d';
-
+  this.displayCountrySelectors = false; 
+  
   this.maxNumDestinationsFreeOrOnArrival = 0;
   this.maxNumSourcesFreeOrOnArrival = 0;
   this.maxValue = 0;
@@ -109,7 +110,35 @@ function WorldMap() {
 WorldMap.prototype = {
 
 	initWorldMap: function() {
-			  
+			   
+			    //check if we have mode data 	
+		  		if(worldMap.userData.mode !== null && 
+		  					worldMap.userData.mode !== undefined ){
+		  				
+		  			  if(worldMap.userData.mode === 'userValue'){
+		  				this.mode = 'userValue';
+		  				//console.info('mode : userValue');
+		  			  }
+		  			  if(worldMap.userData.mode === 'destinations'){
+		  				this.mode = 'destinations';
+		  			    //console.info('mode : destinations');
+		  			  }
+		  			  if(worldMap.userData.mode === 'sources'){
+		  				this.mode = 'sources';
+		  			    //console.info('mode : sources');
+		  			  }
+		  			    
+		  		}
+		  		
+		  		if(worldMap.userData.mode !== null && 
+	  					worldMap.userData.mode !== undefined ){
+		  			  if(worldMap.userData.displayCountrySelectors === true){
+		  				this.displayCountrySelectors = true;
+		  			  }
+		  			
+		  		}
+		  		
+		  		
 			  	if(worldMap.userData.header !== null && 
 			  		worldMap.userData.header !== undefined ){
 				    $('.navbar-brand').html(worldMap.userData.header); 
@@ -323,6 +352,7 @@ WorldMap.prototype = {
 			    
 			  }
 			  animate();
+
 
   },
 
@@ -1524,24 +1554,28 @@ function init() {
 } /* init() end */
 
 function completeInit() {
-  if(Config.saveMapData) {
-    var jsonPretty = JSON.stringify(worldMap.dataCountries, null, '');
-    $.ajax({
-      type: 'POST',
-      url: 'http://test.local/save-to-file/index.php',
-      data: {filename: Config.mergedCountriesFilename, data: jsonPretty},
-      success: function() {
-        log('JSON map data sent');
-      }
-    }).done(function( msg ) {
-      log( 'Response: ' + msg );
-    });
-  }
-
+	
+//  if(Config.saveMapData) {
+//    var jsonPretty = JSON.stringify(worldMap.dataCountries, null, '');
+//    $.ajax({
+//      type: 'POST',
+//      url: 'http://test.local/save-to-file/index.php',
+//      data: {filename: Config.mergedCountriesFilename, data: jsonPretty},
+//      success: function() {
+//        log('JSON map data sent');
+//      }
+//    }).done(function( msg ) {
+//      log( 'Response: ' + msg );
+//    });
+//  }
+	
   worldMap.createCountries();
   worldMap.initControls();
+  
+  //console.info("mode on completeInit: " + worldMap.mode);
+  
   UI.init(worldMap);
-
+  
   worldMap.inited = true;
 
 }
