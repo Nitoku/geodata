@@ -69,6 +69,7 @@ export function createCountriesGeometry(worldMap) {
           //gdp: feature.properties.GDP_MD_EST,
           //will be override later
           userValue : null,
+          
           //population: feature.properties.POP_EST,
           type: feature.properties.TYPE,
           disputed: feature.disputed === true,
@@ -83,7 +84,7 @@ export function createCountriesGeometry(worldMap) {
         
 		  preLabel : "",
 		  postLabel : "",
-		  
+		  countryTitle: "",
         
         };
 
@@ -97,25 +98,31 @@ export function createCountriesGeometry(worldMap) {
         	
           for(var r = 0; r < worldMap.userData.countries.length; r++) {
         	  
-            // 199 nationalities travelling to 243 (?) countries, assuming nationals 
-        	// 		from a country don't need a visa to the sovereignty's main country:
-            // if(CountryDataHelpers.matchDestinationToCountryName(country.name_long, 
-        	//      worldMap.userData.countries[r].name) || 
-        	//        CountryDataHelpers.matchDestinationToCountryName(
-        	//      worldMap.userData.countries[r].name, country.name)) {
-        	  
             if(CountryDataHelpers.matchDestinationToCountryName(country.sovereignt, 
             		worldMap.userData.countries[r].name) || 
             		CountryDataHelpers.matchDestinationToCountryName(
             				worldMap.userData.countries[r].name, country.sovereignt)) {
               
-              log('geometry.js [createCountriesGeometry()] : ' 
-            		  + 'Loading user data for: ' + country.name);
+              //log('geometry.js [createCountriesGeometry()] : ' 
+              //		  + 'Loading user data for: ' + country.name);
               
               country.destinations = worldMap.userData.countries[r].destinations;
               country.userValue = worldMap.userData.countries[r].userValue;
+              
               country.preLabel = worldMap.userData.preLabel;
               country.postLabel = worldMap.userData.postLabel;
+              country.displayValueLabel = worldMap.userData.displayValueLabel;
+              
+              if(worldMap.userData.countries[r].countryTitle !== null && 
+            		  		worldMap.userData.countries[r].countryTitle !== undefined){
+              	  country.countryTitle = worldMap.userData.countries[r].countryTitle;
+              }else{
+            	  country.countryTitle = "";
+              }
+              
+              log('geometry.js [createCountriesGeometry()] : ' 
+              		  + 'Loading user data for: ' + country.name + " notes: " 
+              		  				+  worldMap.userData.countries[r].countryTitle);
               
               numUserLinksFound++;
               

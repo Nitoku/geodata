@@ -299,8 +299,9 @@ THREE.PinchZoomControls = function ( object, domElement ) {
 	}
 
 	function mousewheel( event ) {
-		if ( _this.enabled === false ) return;
-
+		//if ( _this.enabled === false ) return;
+		return;
+		
 		event.preventDefault();
 		// event.stopPropagation();
 

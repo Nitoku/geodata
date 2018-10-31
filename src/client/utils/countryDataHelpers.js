@@ -261,7 +261,7 @@ export function getCountryColorByUserValue(country, maxValue) {
 export function getCountryLinkTitleLabel(country) {
   //emilio 
   //if we don't have data provide no data available	
-  if(country.linkTitle === '') {
+  if(country.linkTitle === undefined) {
     //return 'Special regulations';
 	  return 'Data not available';
   } else {

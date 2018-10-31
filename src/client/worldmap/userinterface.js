@@ -1066,7 +1066,7 @@ export function updateCountryTooltip(worldMap, country) {
               // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
               '<span class="visa-title">' + CountryDataHelpers.getCountryLinkTitleLabel(country) 
               + '</span> ' 
-              + '.<br/>' 
+              + '<br/>' 
               + '<div class="notes">' + country.notes + '</div>');
           } else {
             $('#country-tooltip .details').html( 'Data not available.' );
@@ -1087,7 +1087,7 @@ export function updateCountryTooltip(worldMap, country) {
                 // CountryDataHelpers.getCountryDetailsByVisaStatus(country) +
                 '<span class="visa-title">' + CountryDataHelpers.getCountryLinkTitleLabel(country) 
                 + '</span> ' 
-                + '.<br/>' 
+                + '<br/>' 
                 + '<div class="notes">' + country.notes + '</div>');
             } else {
               $('#country-tooltip .details').html( 'Data not available.' );
@@ -1189,14 +1189,24 @@ export function showCountryHoverInfoGDP(country) {
   if(country.userValue > 0) {
 	  
     var value = country.userValue;
-    $('#country-tooltip .details').html( 
+    
+    var details;
+    if(country.displayValueLabel){
+    	details =  
     		country.preLabel
 			+ " " 
 			+ CountryDataHelpers.getCountryNameWithArticle( country )
 			+ ' : ' 
 			+ value
 			+ ' ' 
-			+ country.postLabel );
+			+ country.postLabel
+			+ ' '  
+			+ country.countryTitle;
+    }else{
+    	details = country.countryTitle; 
+    }
+    	
+    $('#country-tooltip .details').html(details);
 				
     		//'GDP: ' + formatNumber(value, 1) + ' Billion USD' );
     
@@ -1357,8 +1367,8 @@ export function bindEventHandlers() {
   container.bind('mousedown', onMouseDown);
   container.bind('mousemove', onMouseMove);
   container.bind('mouseup', onMouseUp);
-  container.bind('mousewheel', onMouseWheel);
-  container.bind('DOMMouseScroll', onMouseWheel); // firefox
+  //container.bind('mousewheel', onMouseWheel);
+  //container.bind('DOMMouseScroll', onMouseWheel); // firefox
 
   container.bind('touchstart', onTouchStart);
   container.bind('touchmove', onTouchMove);
